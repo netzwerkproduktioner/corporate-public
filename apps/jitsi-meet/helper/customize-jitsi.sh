@@ -1,4 +1,4 @@
-#!/bin/bash  
+#!/bin/sh  
 
 #################
 # Setup (after One-Click-App configuration)  
@@ -7,14 +7,17 @@
 #################
 
 # be aware that your vars are set and your .env is loaded ..
+. /opt/.env
 
 # Updating
 # check if there is already an 'customizations'-folder  
 if [ -d ${CUSTOMIZATIONS_PATH} ]
 then
     # removing previous installation 
+    echo "removing existing files .."
     rm -Rf ${CUSTOMIZATIONS_PATH}
 else
+    echo "creating folder with subfolder .."
     mkdir -p ${CUSTOMIZATIONS_PATH}
 fi
 
@@ -22,7 +25,7 @@ fi
 # after checkout specific files get picked, other files the repo are removed immediately
 # CUSTOMIZATIONS_PATH=/opt/apps/jitsi-meet/
 git clone https://github.com/netzwerkproduktioner/corporate-public.git /opt/repo
-mv /opt/repo/apps/jitsi-meet ${CUSTOMIZATIONS_PATH}
+mv -f /opt/repo/apps/jitsi-meet/* ${CUSTOMIZATIONS_PATH}/
 # housekeeping
 rm -R /opt/repo
 
@@ -43,7 +46,7 @@ ln -sf ${CUSTOMIZATIONS_PATH}/configs/interface_config.js /usr/share/jitsi-meet/
 
 
 # create prosody users
-prosodyctl register ${PROSODY_USER} ${FQDN} ${PROSODY_PASSWORD}
+prosodyctl --root register ${PROSODY_USER} ${FQDN} ${PROSODY_PASSWORD}
 systemctl restart prosody
 
 # restarts with new configs  
