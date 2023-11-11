@@ -62,10 +62,10 @@ mkdir -p /var/www/jitsi-meet/${FQDN}
 mv -f ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/* /var/www/jitsi-meet/${FQDN}/
 
 # symlink files from directory outside the default installation into the installation paths 
-ln -sf /usr/share/jitsi-meet/images/watermark.svg /var/www/jitsi-meet/${FQDN}/images/watermark.svg
-ln -sf /usr/share/jitsi-meet/images/favicon.ico /var/www/jitsi-meet/${FQDN}/images/favicon.ico 
-ln -sf /usr/share/jitsi-meet/css/all.css /var/www/jitsi-meet/${FQDN}/css/all.css
-ln -sf /usr/share/jitsi-meet/static/css/ /var/www/jitsi-meet/${FQDN}/static/css/
+ln -sf /var/www/jitsi-meet/${FQDN}/images/watermark.svg /usr/share/jitsi-meet/images/watermark.svg
+ln -sf /var/www/jitsi-meet/${FQDN}/images/favicon.ico /usr/share/jitsi-meet/images/favicon.ico
+ln -sf /var/www/jitsi-meet/${FQDN}/css/all.css /usr/share/jitsi-meet/css/all.css
+ln -sf /var/www/jitsi-meet/${FQDN}/static/css/ /usr/share/jitsi-meet/static/css/
 
 ln -sf /var/www/jitsi-meet/images/${FQDN}/header.jpg /usr/share/jitsi-meet/images/header.jpg
 
