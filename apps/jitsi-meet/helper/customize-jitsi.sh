@@ -16,21 +16,23 @@ then
     # removing previous installation 
     echo "removing existing files .."
     rm -Rf ${CUSTOMIZATIONS_PATH}
+    mkdir -p ${CUSTOMIZATIONS_PATH}
 else
     echo "creating folder with subfolder .."
     mkdir -p ${CUSTOMIZATIONS_PATH}
 fi
 
 # checkout your repository with your custom files. 
-# after checkout specific files get picked, other files the repo are removed immediately
+# after checkout specific files get picked, other files the repo are removed after setup 
 # CUSTOMIZATIONS_PATH=/opt/apps/jitsi-meet/
 git clone https://github.com/netzwerkproduktioner/corporate-public.git /opt/repo
 mv -f /opt/repo/apps/jitsi-meet/* ${CUSTOMIZATIONS_PATH}/
-# housekeeping
-rm -R /opt/repo
 
 # build domain string  
 FQDN=${JITSI_FQDN=${JITSI_SUBDOMAIN}.${JITSI_DOMAIN}.${JITSI_TLD}}
+
+# renames default folder to local customization 
+mv -f ${CUSTOMIZATIONS_PATH}/custom-frontend/subdomain.domain.tld/ ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/
 
 # parse config files to destination  
 sed -e "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" \
@@ -46,7 +48,7 @@ ln -sf ${CUSTOMIZATIONS_PATH}/configs/interface_config.js /usr/share/jitsi-meet/
 
 
 # create prosody users
-prosodyctl --root register ${PROSODY_USER} ${FQDN} ${PROSODY_PASSWORD}
+prosodyctl register --root ${PROSODY_USER} ${FQDN} ${PROSODY_PASSWORD}
 systemctl restart prosody
 
 # restarts with new configs  
@@ -67,6 +69,9 @@ ln -sf /usr/share/jitsi-meet/static/css/ /var/www/jitsi-meet/${FQDN}/static/css/
 ln -sf /var/www/jitsi-meet/images/${FQDN}/header.jpg /usr/share/jitsi-meet/images/header.jpg
 
 # rename files from default to your local environment (your vars in your env)
+# your legal notice comes from a different folder 
+mv -f /opt/repo/web/default/html/legal-notice_de.html /var/www/jitsi-meet/${FQDN}/static/legal-notice_de.html
+# renaming
 mv -f /var/www/jitsi-meet/${FQDN}/static/legal-notice_de.html /var/www/jitsi-meet/${FQDN}/static/${FILENAME_LEGAL_NOTICE}
 mv -f /var/www/jitsi-meet/${FQDN}/static/privacy-policy-jitsi_de.html /var/www/jitsi-meet/${FQDN}/static/${FILENAME_PRIVACY_POLICY}
 
@@ -83,3 +88,6 @@ sed -e "s/{{FQDN}}/${FQDN}/g" \
 rm ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/static/welcome.html
 
 ln -sf /usr/share/jitsi-meet/static/welcomePageAdditionalContent.html /var/www/jitsi-meet/${FQDN}/static/welcomePageAdditionalContent.html
+
+# housekeeping
+rm -R /opt/repo
