@@ -1,0 +1,200 @@
+/* styles */  
+
+/*
+License information
+
+This Font Software is licensed under the Apache License 2.0.
+You can get a copy of the license under: https://www.apache.org/licenses/LICENSE-2.0  
+
+*/
+
+/* Webfont: OpenSans-Regular */@font-face {
+    font-family: 'OpenSans';
+    src: url('OpenSans-Regular.eot'); /* IE9 Compat Modes */
+    src: url('OpenSans-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('OpenSans-Regular.woff') format('woff'), /* Modern Browsers */
+         url('OpenSans-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('OpenSans-Regular.svg#OpenSans-Regular') format('svg'); /* Legacy iOS */
+    font-style: normal;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+}
+
+/* Webfont: OpenSans-Italic */@font-face {
+    font-family: 'OpenSans';
+    src: url('OpenSans-Italic.eot'); /* IE9 Compat Modes */
+    src: url('OpenSans-Italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('OpenSans-Italic.woff') format('woff'), /* Modern Browsers */
+         url('OpenSans-Italic.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('OpenSans-Italic.svg#OpenSans-Italic') format('svg'); /* Legacy iOS */
+    font-style: italic;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+}
+
+/* Webfont: OpenSans-Bold */@font-face {
+    font-family: 'OpenSans';
+    src: url('OpenSans-Bold.eot'); /* IE9 Compat Modes */
+    src: url('OpenSans-Bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('OpenSans-Bold.woff') format('woff'), /* Modern Browsers */
+         url('OpenSans-Bold.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('OpenSans-Bold.svg#OpenSans-Bold') format('svg'); /* Legacy iOS */
+    font-style: normal;
+    font-weight: bold;
+    text-rendering: optimizeLegibility;
+}
+
+/* Webfont: OpenSans-BoldItalic */@font-face {
+    font-family: 'OpenSans';
+    src: url('OpenSans-BoldItalic.eot'); /* IE9 Compat Modes */
+    src: url('OpenSans-BoldItalic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('OpenSans-BoldItalic.woff') format('woff'), /* Modern Browsers */
+         url('OpenSans-BoldItalic.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('OpenSans-BoldItalic.svg#OpenSans-BoldItalic') format('svg'); /* Legacy iOS */
+    font-style: italic;
+    font-weight: bold;
+    text-rendering: optimizeLegibility;
+}
+
+/* Webfont: MaterialIcons-Regular */@font-face {
+    font-family: 'MaterialIcons';
+    src: url('MaterialIcons-Regular.eot'); /* IE9 Compat Modes */
+    src: url('MaterialIcons-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('MaterialIcons-Regular.woff') format('woff'), /* Modern Browsers */
+         url('MaterialIcons-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('MaterialIcons-Regular.svg#MaterialIcons-Regular') format('svg'); /* Legacy iOS */
+    font-style: normal;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+}
+  
+
+:root {
+    --white: #ffffff;
+    --lightgrey: #e6e6e6;
+    --darkgrey: #474747;
+    --hf_blue: #0066B3;
+    --hf_yellow: #FFCB04;
+    --nwp_background: #E1EDF4; 
+  }
+
+.body, .html {
+    margin: 0;
+    padding: 0;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--hf_blue);
+}
+
+.nav-sub {
+    padding: 8rem;
+}
+
+.imprint {
+    border-style: solid;
+    border-width: 4rem;
+    border-color: var(--white);
+    padding: 3rem;
+    box-sizing: content-box;
+    font-family: 'OpenSans';
+    background-color: var(--white);
+    border-radius: 0.6rem;
+    outline-offset: 1rem;
+    outline: 0.4rem solid var(--white);
+}
+
+.imprint h1 {
+    font-size: 1.2rem;
+    padding: 0 0 1.2rem 0;
+    margin: 0;
+    font-variant: normal;
+    font-style: normal;
+}
+
+.imprint h1 + h2 {
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: normal;
+    font-variant: normal;
+    margin:0;
+    padding:0 0 1rem 0;
+}
+
+.imprint a, 
+.imprint a:visited {
+    color: var(--hf_blue);
+}
+.imprint a:active,
+.imprint a:hover {
+    text-decoration: underline;
+}
+.imprint a[href^="mailto:"] {
+    text-decoration: none;
+}
+
+.address {
+    font-variant: normal;
+    font-style: normal;
+    line-height: 1.6rem;
+    font-size: 1rem;
+}
+
+.be-footer {
+    margin-top: 30px; 
+    line-height: 1.7; 
+    position: static !important;
+}
+
+.be-footer-about {
+    width: 100%; 
+    background: var(--darkgrey); 
+    position: absolute;
+    text-align: center; 
+    bottom: 0;
+}
+
+.be-footer-link {
+    color: var(--lightgrey) !important;
+}
+
+.be-icon {
+    font-family: MaterialIcons;
+    text-decoration: none;
+}
+
+.be-icon a,
+.be-icon a:hover, 
+.be-icon a:active,
+.be-icon a:visited {
+    text-decoration: none;
+    color: inherit;
+}
+
+.size_96 {
+    font-size: 96px;
+}
+
+.white {
+    color: var(--white);
+}
+
+/* overrides defaults in all.css */
+
+.header {
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-color:#eae9ee !important;
+    /* background-size: auto !important; */ /* uncomment this if you use a centered background with same background-color (left and right) */
+    background-image: url(../../images/header_jitsi2023_default_1280x400.jpg) !important;
+}
+
+.header-text-title, 
+.header-text-subtitle {
+    color: var(--darkgrey) !important;
+}
