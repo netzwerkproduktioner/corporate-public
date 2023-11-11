@@ -44,8 +44,8 @@ sed "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/configs/domain
 sed -e "s/{{YOUR_JICOFO_PASSWORD}}/${JICOFO_PASSWORD}/g" \
 -e "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/configs/jicofo-template.conf > /etc/jitsi/jicofo/jicofo.conf
 
-mv -f ${CUSTOMIZATIONS_PATH}/configs/interface_config-template.js /opt/interface_config.js
-ln -sf /opt/interface_config.js /usr/share/jitsi-meet/interface_config.js
+mv -f ${CUSTOMIZATIONS_PATH}/configs/interface_config-template.js ${CUSTOMIZATIONS_PATH}/configs/interface_config.js
+ln -sf ${CUSTOMIZATIONS_PATH}/configs/interface_config.js /usr/share/jitsi-meet/interface_config.js
 
 
 # create prosody users
@@ -88,7 +88,11 @@ sed -e "s/{{FQDN}}/${FQDN}/g" \
 -e "s/{{FILENAME_PRIVACY_POLICY}}/${FILENAME_PRIVACY_POLICY}/g" /var/www/jitsi-meet/${FQDN}/static/welcome.html > /var/www/jitsi-meet/${FQDN}/static/welcomePageAdditionalContent.html
 rm /var/www/jitsi-meet/${FQDN}/static/welcome.html
 
-ln -sf /usr/share/jitsi-meet/static/welcomePageAdditionalContent.html /var/www/jitsi-meet/${FQDN}/static/welcomePageAdditionalContent.html
+ln -sf /var/www/jitsi-meet/${FQDN}/static/welcomePageAdditionalContent.html /usr/share/jitsi-meet/static/welcomePageAdditionalContent.html
 
 # housekeeping
-rm -R /opt/repo
+rm -R /opt/apps/_temp/repo
+rm -R /opt/apps/jitsi-meet/custom-frontend
+rm -R /opt/apps/jitsi-meet/helper
+# rm -R /opt/.env
+# rm /opt/customize-jitsi.sh
