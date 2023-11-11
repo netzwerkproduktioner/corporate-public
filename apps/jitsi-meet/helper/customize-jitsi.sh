@@ -26,8 +26,8 @@ fi
 # checkout your repository with your custom files. 
 # after checkout specific files get picked, other files the repo are removed after setup 
 # CUSTOMIZATIONS_PATH=/opt/apps/jitsi-meet/
-git clone https://github.com/netzwerkproduktioner/corporate-public.git /opt/repo
-mv -f /opt/repo/apps/jitsi-meet/* ${CUSTOMIZATIONS_PATH}/
+git clone https://github.com/netzwerkproduktioner/corporate-public.git /opt/apps/_temp/repo
+mv -f /opt/apps/_temp/repo/apps/jitsi-meet/* ${CUSTOMIZATIONS_PATH}/
 
 # build domain string  
 FQDN=${JITSI_FQDN=${JITSI_SUBDOMAIN}.${JITSI_DOMAIN}.${JITSI_TLD}}
@@ -44,8 +44,8 @@ sed "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/configs/domain
 sed -e "s/{{YOUR_JICOFO_PASSWORD}}/${JICOFO_PASSWORD}/g" \
 -e "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/configs/jicofo-template.conf > /etc/jitsi/jicofo/jicofo.conf
 
-mv -f ${CUSTOMIZATIONS_PATH}/configs/interface_config-template.js ${CUSTOMIZATIONS_PATH}/configs/interface_config.js
-ln -sf ${CUSTOMIZATIONS_PATH}/configs/interface_config.js /usr/share/jitsi-meet/interface_config.js
+mv -f ${CUSTOMIZATIONS_PATH}/configs/interface_config-template.js /opt/interface_config.js
+ln -sf /opt/interface_config.js /usr/share/jitsi-meet/interface_config.js
 
 
 # create prosody users
@@ -71,7 +71,7 @@ ln -sf /var/www/jitsi-meet/images/${FQDN}/header.jpg /usr/share/jitsi-meet/image
 
 # rename files from default to your local environment (your vars in your env)
 # your legal notice comes from a different folder 
-mv -f /opt/repo/web/default/html/legal-notice/legal-notice_de.html /var/www/jitsi-meet/${FQDN}/static/legal-notice_de.html
+mv -f /opt/apps/_temp/repo/web/default/html/legal-notice/legal-notice_de.html /var/www/jitsi-meet/${FQDN}/static/legal-notice_de.html
 # renaming
 mv -f /var/www/jitsi-meet/${FQDN}/static/legal-notice_de.html /var/www/jitsi-meet/${FQDN}/static/${FILENAME_LEGAL_NOTICE}
 mv -f /var/www/jitsi-meet/${FQDN}/static/privacy-policy-jitsi_de.html /var/www/jitsi-meet/${FQDN}/static/${FILENAME_PRIVACY_POLICY}
@@ -85,8 +85,8 @@ sed -e "s/{{FQDN}}/${FQDN}/g" \
 -e "s/{{NAME_LEGAL_NOTICE}}/${NAME_LEGAL_NOTICE}/g" \
 -e "s/{{NAME_PRIVACY_POLICY}}/${NAME_PRIVACY_POLICY}/g" \
 -e "s/{{FILENAME_LEGAL_NOTICE}}/${FILENAME_LEGAL_NOTICE}/g" \
--e "s/{{FILENAME_PRIVACY_POLICY}}/${FILENAME_PRIVACY_POLICY}/g" ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/static/welcome.html > ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/static/welcomePageAdditionalContent.html
-rm ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/static/welcome.html
+-e "s/{{FILENAME_PRIVACY_POLICY}}/${FILENAME_PRIVACY_POLICY}/g" /var/www/jitsi-meet/${FQDN}/static/welcome.html > /var/www/jitsi-meet/${FQDN}/static/welcomePageAdditionalContent.html
+rm /var/www/jitsi-meet/${FQDN}/static/welcome.html
 
 ln -sf /usr/share/jitsi-meet/static/welcomePageAdditionalContent.html /var/www/jitsi-meet/${FQDN}/static/welcomePageAdditionalContent.html
 
