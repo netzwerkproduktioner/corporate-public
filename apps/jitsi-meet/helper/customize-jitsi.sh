@@ -41,7 +41,7 @@ sed -e "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" \
 
 sed "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/configs/domain-config.js > /etc/jitsi/meet/${FQDN}-config.js
 
-sed -e "s/{{YOUR_JICOFO_PASSWORD}}/${JICOFO_PASSWORD}/g" \
+sed -e "s/{{JICOFO_PASSWORD}}/${JICOFO_PASSWORD}/g" \
 -e "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/configs/jicofo-template.conf > /etc/jitsi/jicofo/jicofo.conf
 
 mv -f ${CUSTOMIZATIONS_PATH}/configs/interface_config-template.js ${CUSTOMIZATIONS_PATH}/configs/interface_config.js
@@ -65,7 +65,7 @@ mv -f ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/* /var/www/jitsi-meet/${FQD
 ln -sf /var/www/jitsi-meet/${FQDN}/images/watermark.svg /usr/share/jitsi-meet/images/watermark.svg
 ln -sf /var/www/jitsi-meet/${FQDN}/images/favicon.ico /usr/share/jitsi-meet/images/favicon.ico
 ln -sf /var/www/jitsi-meet/${FQDN}/css/all.css /usr/share/jitsi-meet/css/all.css
-ln -sf /var/www/jitsi-meet/${FQDN}/static/css/ /usr/share/jitsi-meet/static/css/
+ln -sf /var/www/jitsi-meet/${FQDN}/static/css /usr/share/jitsi-meet/static/css
 
 ln -sf /var/www/jitsi-meet/images/${FQDN}/header.jpg /usr/share/jitsi-meet/images/header.jpg
 
@@ -91,7 +91,7 @@ rm /var/www/jitsi-meet/${FQDN}/static/welcome.html
 ln -sf /var/www/jitsi-meet/${FQDN}/static/welcomePageAdditionalContent.html /usr/share/jitsi-meet/static/welcomePageAdditionalContent.html
 
 # housekeeping
-rm -R /opt/apps/_temp/repo
+rm -R /opt/apps/_temp
 rm -R /opt/apps/jitsi-meet/custom-frontend
 rm -R /opt/apps/jitsi-meet/helper
 # rm -R /opt/.env

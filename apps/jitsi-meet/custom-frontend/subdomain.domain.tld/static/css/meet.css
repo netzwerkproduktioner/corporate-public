@@ -201,7 +201,7 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
     background-repeat: no-repeat !important;
     background-color:#eae9ee !important;
     /* background-size: auto !important; */ /* uncomment this if you use a centered background with same background-color (left and right) */
-    background-image: url(../../images/header_jitsi2023_default_1280x400.jpg) !important;
+    background-image: url(../../images/header.jpg) !important;
 }
 
 .header-text-title, 
