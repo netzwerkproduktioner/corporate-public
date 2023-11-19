@@ -102,6 +102,9 @@ ln -sf /var/www/jitsi-meet/${FQDN}/images/header.png /usr/share/jitsi-meet/image
 # rename files from default to your local environment (your vars in your env)
 # your legal notice comes from a different folder 
 mv -f /opt/apps/_temp/repo/web/default/html/legal-notice/legal-notice_de.html /var/www/jitsi-meet/${FQDN}/static/legal-notice_de.html
+mv -f /opt/apps/_temp/repo/web/default/css/styles.css /var/www/jitsi-meet/${FQDN}/static/css/styles.css
+mkdir -p /var/www/jitsi-meet/${FQDN}/static/images
+mv -f /opt/apps/_temp/repo/web/default/images/favicon.ico /var/www/jitsi-meet/${FQDN}/static/images/favicon.ico
 # renaming
 mv -f /var/www/jitsi-meet/${FQDN}/static/legal-notice_de.html /var/www/jitsi-meet/${FQDN}/static/${FILENAME_LEGAL_NOTICE}
 mv -f /var/www/jitsi-meet/${FQDN}/static/privacy-policy-jitsi_de.html /var/www/jitsi-meet/${FQDN}/static/${FILENAME_PRIVACY_POLICY}
