@@ -70,6 +70,7 @@ sed -e "s/{{JICOFO_PASSWORD}}/${JICOFO_PASSWORD}/g" \
 
 mv -f ${CUSTOMIZATIONS_PATH}/configs/interface_config-template.js ${CUSTOMIZATIONS_PATH}/configs/interface_config.js
 ln -sf ${CUSTOMIZATIONS_PATH}/configs/interface_config.js /usr/share/jitsi-meet/interface_config.js
+ln -sf ${CUSTOMIZATIONS_PATH}/configs/main-de.json /usr/share/jitsi-meet/lang/main-de.json
 
 # reloads modified config file
 systemctl restart prosody
