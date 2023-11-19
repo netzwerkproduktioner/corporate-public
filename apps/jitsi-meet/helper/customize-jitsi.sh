@@ -9,6 +9,9 @@
 # be aware that your vars are set and your .env is loaded ..
 . /opt/.env
 
+# build domain string  
+FQDN=${JITSI_FQDN=${JITSI_SUBDOMAIN}.${JITSI_DOMAIN}.${JITSI_TLD}}
+
 # Updating
 # check if there is already an 'customizations'-folder  
 if [ -d ${CUSTOMIZATIONS_PATH} ]
@@ -17,6 +20,7 @@ then
     echo "removing existing files .."
     rm -Rf ${CUSTOMIZATIONS_PATH}
     mkdir -p ${CUSTOMIZATIONS_PATH}
+    rm -Rf /var/www/${FQDN}
     # remove /var/www/..
 else
     echo "creating folder with subfolder .."
@@ -28,9 +32,6 @@ fi
 # CUSTOMIZATIONS_PATH=/opt/apps/jitsi-meet/
 git clone https://github.com/netzwerkproduktioner/corporate-public.git /opt/apps/_temp/repo
 mv -f /opt/apps/_temp/repo/apps/jitsi-meet/* ${CUSTOMIZATIONS_PATH}/
-
-# build domain string  
-FQDN=${JITSI_FQDN=${JITSI_SUBDOMAIN}.${JITSI_DOMAIN}.${JITSI_TLD}}
 
 # renames default folder to local customization 
 mv -f ${CUSTOMIZATIONS_PATH}/custom-frontend/subdomain.domain.tld/ ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/
@@ -70,11 +71,14 @@ sed -e "s/{{JICOFO_PASSWORD}}/${JICOFO_PASSWORD}/g" \
 mv -f ${CUSTOMIZATIONS_PATH}/configs/interface_config-template.js ${CUSTOMIZATIONS_PATH}/configs/interface_config.js
 ln -sf ${CUSTOMIZATIONS_PATH}/configs/interface_config.js /usr/share/jitsi-meet/interface_config.js
 
-# create prosody users
 # reloads modified config file
 systemctl restart prosody
-# adds new user # TODO: --quiet to hide logs..
-prosodyctl register --root ${PROSODY_USER} ${FQDN} ${PROSODY_PASSWORD}
+systemctl restart jicofo
+systemctl restart jitsi-videobridge2
+
+# adds new user
+# NOTE: register has no flags (instead ejabberd..) @see man prosodyctl  
+prosodyctl register ${PROSODY_USER} ${FQDN} ${PROSODY_PASSWORD}
 systemctl restart prosody
 
 # restarts with new configs  
