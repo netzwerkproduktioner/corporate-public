@@ -197,6 +197,7 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
 /* overrides defaults in all.css */
 
 .header {
+    height: 385px;
     background-position: center !important;
     background-repeat: no-repeat !important;
     background-color:#E1EDF4 !important;
