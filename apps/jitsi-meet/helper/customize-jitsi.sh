@@ -70,9 +70,6 @@ sed -e "s/{{JICOFO_PASSWORD}}/${JICOFO_PASSWORD}/g" \
 mv -f ${CUSTOMIZATIONS_PATH}/configs/interface_config-template.js ${CUSTOMIZATIONS_PATH}/configs/interface_config.js
 ln -sf ${CUSTOMIZATIONS_PATH}/configs/interface_config.js /usr/share/jitsi-meet/interface_config.js
 
-# TODO: remove after debugging
-echo ${PROSODY_USER} ${FQDN} ${PROSODY_PASSWORD}
-
 # create prosody users
 # reloads modified config file
 systemctl restart prosody
