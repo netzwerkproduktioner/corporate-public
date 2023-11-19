@@ -35,11 +35,34 @@ FQDN=${JITSI_FQDN=${JITSI_SUBDOMAIN}.${JITSI_DOMAIN}.${JITSI_TLD}}
 # renames default folder to local customization 
 mv -f ${CUSTOMIZATIONS_PATH}/custom-frontend/subdomain.domain.tld/ ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/
 
+# modifying cfg.lua
+# extract the password 
+# pattern:
+# - zero or more blanks at beginning of line
+# - followed by 'external_service_secret :"' (note the double quote)
+# - followed by undefined number of any char, ends with '";' (double quote and semicolon)  
+# - the pattern between the double quotes is catched as group and substituted to stdout 
+# - stdout = passwordstring is stored into $EXTERNAL_SERVICE_SECRET  
+# expected patterin in <domain>.cfg.lua (NOTE the blanks!): external_service_secret = "<chars>"; 
+EXTERNAL_SERVICE_SECRET=$(sed -n 's/ \{0,\}external_service_secret = \"\(.*\)\"\;$/\1/p' /etc/prosody/conf.avail/${FQDN}.cfg.lua)
+
 # parse config files to destination  
 sed -e "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" \
 -e "s/{{EXTERNAL_SERVICE_SECRET}}/${EXTERNAL_SERVICE_SECRET}/g" ${CUSTOMIZATIONS_PATH}/configs/domain.cfg.lua > /etc/prosody/conf.avail/${FQDN}.cfg.lua
 
 sed "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/configs/domain-config.js > /etc/jitsi/meet/${FQDN}-config.js
+
+# modifying jicofo.conf
+# extract the password
+# pattern:
+# - zero or more blanks at beginning of line
+# - followed by 'password :"' (note the double quote)
+# - followed by undefined number of any char, ends with '"' (double quote)  
+# - the pattern between the double quotes is catched as group and substituted to stdout 
+# - stdout = passwordstring is stored into $JICOFO_PASSWORD  
+# expected patterin in jicofo.conf: password: "<chars>" 
+JICOFO_PASSWORD=$(sed -n 's/ \{0,\}password: \"\(.*\)\"$/\1/p' /etc/jitsi/jicofo/jicofo.conf)
+
 
 sed -e "s/{{JICOFO_PASSWORD}}/${JICOFO_PASSWORD}/g" \
 -e "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/configs/jicofo-template.conf > /etc/jitsi/jicofo/jicofo.conf
@@ -47,8 +70,13 @@ sed -e "s/{{JICOFO_PASSWORD}}/${JICOFO_PASSWORD}/g" \
 mv -f ${CUSTOMIZATIONS_PATH}/configs/interface_config-template.js ${CUSTOMIZATIONS_PATH}/configs/interface_config.js
 ln -sf ${CUSTOMIZATIONS_PATH}/configs/interface_config.js /usr/share/jitsi-meet/interface_config.js
 
+# TODO: remove after debugging
+echo ${PROSODY_USER} ${FQDN} ${PROSODY_PASSWORD}
 
 # create prosody users
+# reloads modified config file
+systemctl restart prosody
+# adds new user # TODO: --quiet to hide logs..
 prosodyctl register --root ${PROSODY_USER} ${FQDN} ${PROSODY_PASSWORD}
 systemctl restart prosody
 
