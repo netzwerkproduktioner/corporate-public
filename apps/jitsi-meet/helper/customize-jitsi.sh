@@ -20,7 +20,7 @@ then
     echo "removing existing files .."
     rm -Rf ${CUSTOMIZATIONS_PATH}
     mkdir -p ${CUSTOMIZATIONS_PATH}
-    rm -Rf /var/www/${FQDN}
+    rm -Rf /var/www/jitsi-meet/${FQDN}
     # remove /var/www/..
 else
     echo "creating folder with subfolder .."
@@ -97,6 +97,7 @@ ln -sf /var/www/jitsi-meet/${FQDN}/css/all.css /usr/share/jitsi-meet/css/all.css
 ln -sf /var/www/jitsi-meet/${FQDN}/static/css /usr/share/jitsi-meet/static/css
 
 ln -sf /var/www/jitsi-meet/${FQDN}/images/header.jpg /usr/share/jitsi-meet/images/header.jpg
+ln -sf /var/www/jitsi-meet/${FQDN}/images/header.png /usr/share/jitsi-meet/images/header.png
 
 # rename files from default to your local environment (your vars in your env)
 # your legal notice comes from a different folder 
