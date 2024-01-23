@@ -108,7 +108,7 @@ var interfaceConfig = {
     // has a suboptimal experience. Browsers which are not listed as optimal or
     // unsupported are considered suboptimal. Valid values are:
     // chrome, chromium, edge, electron, firefox, nwjs, opera, safari
-    OPTIMAL_BROWSERS: [ 'chrome', 'chromium', 'firefox', 'nwjs', 'electron', 'safari' ],
+    OPTIMAL_BROWSERS: [ 'chrome', 'chromium', 'nwjs', 'electron', 'egde' ],
 
     POLICY_LOGO: null,
     PROVIDER_NAME: 'Jitsi',
@@ -140,7 +140,7 @@ var interfaceConfig = {
 
     SHOW_JITSI_WATERMARK: true,
     SHOW_POWERED_BY: false,
-    SHOW_PROMOTIONAL_CLOSE_PAGE: false,
+    SHOW_PROMOTIONAL_CLOSE_PAGE: true,
 
     /*
      * If indicated some of the error dialogs may point to the support URL for
