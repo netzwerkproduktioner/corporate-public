@@ -1,12 +1,15 @@
 #!/bin/sh  
 
 #################
+#
 # Setup (after One-Click-App configuration)  
 # Run this setup script after successfully ran the Hetzner One-Click-App. 
-# Notice: 
+#
 #################
 
 # be aware that your vars are set and your .env is loaded ..
+# remember: the env file is build from your cloud-config.yml  
+# remember: set values for vars (for this script) in your env file  
 . /opt/.env
 
 # build domain string  
@@ -30,7 +33,7 @@ fi
 # checkout your repository with your custom files. 
 # after checkout specific files get picked, other files the repo are removed after setup 
 # CUSTOMIZATIONS_PATH=/opt/apps/jitsi-meet/
-git clone https://github.com/netzwerkproduktioner/corporate-public.git /opt/apps/_temp/repo
+git clone ${CUSTOMIZATIONS_REPO} /opt/apps/_temp/repo
 mv -f /opt/apps/_temp/repo/apps/jitsi-meet/* ${CUSTOMIZATIONS_PATH}/
 
 # renames default folder to local customization 
@@ -44,7 +47,7 @@ mv -f ${CUSTOMIZATIONS_PATH}/custom-frontend/subdomain.domain.tld/ ${CUSTOMIZATI
 # - followed by undefined number of any char, ends with '";' (double quote and semicolon)  
 # - the pattern between the double quotes is catched as group and substituted to stdout 
 # - stdout = passwordstring is stored into $EXTERNAL_SERVICE_SECRET  
-# expected patterin in <domain>.cfg.lua (NOTE the blanks!): external_service_secret = "<chars>"; 
+# expected pattern in <domain>.cfg.lua (NOTE the blanks!): external_service_secret = "<chars>"; 
 EXTERNAL_SERVICE_SECRET=$(sed -n 's/ \{0,\}external_service_secret = \"\(.*\)\"\;$/\1/p' /etc/prosody/conf.avail/${FQDN}.cfg.lua)
 
 # parse config files to destination  
@@ -61,7 +64,7 @@ sed "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/configs/domain
 # - followed by undefined number of any char, ends with '"' (double quote)  
 # - the pattern between the double quotes is catched as group and substituted to stdout 
 # - stdout = passwordstring is stored into $JICOFO_PASSWORD  
-# expected patterin in jicofo.conf: password: "<chars>" 
+# expected pattern in jicofo.conf: password: "<chars>" 
 JICOFO_PASSWORD=$(sed -n 's/ \{0,\}password: \"\(.*\)\"$/\1/p' /etc/jitsi/jicofo/jicofo.conf)
 
 
@@ -89,6 +92,20 @@ systemctl restart jitsi-videobridge2
 
 
 # setup your custom frontend 
+# parse static files before moving them  
+
+STATIC_FILES=("close3.html")
+
+for FILE in ${STATIC_FILES[@]}
+do
+    # replace domain-placeholder in current file  
+    CONTENT_REPLACEMENT=$(sed -e "s/{{FQDN}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/static/${FILE})
+    # temp file 
+    # note: echo with double quotes to keep the line breaks..
+    echo "${CONTENT_REPLACEMENT}" > ${FILE}
+done
+
+# move files
 mkdir -p /var/www/jitsi-meet/${FQDN}
 mv -f ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/* /var/www/jitsi-meet/${FQDN}/
 
@@ -106,6 +123,7 @@ ln -sf /var/www/jitsi-meet/${FQDN}/images/header.png /usr/share/jitsi-meet/image
 # your legal notice comes from a different folder 
 mv -f /opt/apps/_temp/repo/web/default/css/styles.css /var/www/jitsi-meet/${FQDN}/static/css/styles.css
 
+# TODO: remove mkdir - folder already exists in repo, otherwise symlinking (see above) would fail  
 mkdir -p /var/www/jitsi-meet/${FQDN}/static/images
 mv -f /opt/apps/_temp/repo/web/default/images/favicon.ico /var/www/jitsi-meet/${FQDN}/static/images/favicon.ico
 # renaming and parsing
