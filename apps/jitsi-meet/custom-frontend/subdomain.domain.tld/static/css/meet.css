@@ -158,15 +158,18 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
 .be-footer {
     margin-top: 30px; 
     line-height: 1.7; 
-    position: static !important;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    background: var(--darkgrey); 
 }
 
 .be-footer-about {
-    width: 100%; 
-    background: var(--darkgrey); 
+    text-align: center;
     position: absolute;
-    text-align: center; 
-    bottom: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .be-footer-link {
