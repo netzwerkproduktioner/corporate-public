@@ -240,6 +240,11 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
     margin-top: 0 !important;
 }
 
+.leftwatermark {
+    width: 160px;
+    height: 160px;
+}
+
 .welcome .welcome-watermark .watermark.leftwatermark {
     width: 80px !important;
     height: 80px !important;
@@ -270,3 +275,7 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
     background: none !important;
 }
 
+div#videospace div.leftwatermark.watermark {
+    background-position: 50% 50%;
+    margin: 0 !important;
+}

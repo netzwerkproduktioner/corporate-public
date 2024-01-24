@@ -116,18 +116,20 @@ ln -sf /var/www/jitsi-meet/${FQDN}/images/watermark.svg /usr/share/jitsi-meet/im
 ln -sf /var/www/jitsi-meet/${FQDN}/images/favicon.ico /usr/share/jitsi-meet/favicon.ico
 ln -sf /var/www/jitsi-meet/${FQDN}/css/all.css /usr/share/jitsi-meet/css/all.css
 ln -sf /var/www/jitsi-meet/${FQDN}/static/css /usr/share/jitsi-meet/static/css
-ln -sf /var/www/jitsi-meet/${FQDN}/static/images /usr/share/jitsi-meet/static/images
+# ln -sf /var/www/jitsi-meet/${FQDN}/static/images /usr/share/jitsi-meet/static/images
 
 ln -sf /var/www/jitsi-meet/${FQDN}/images/header.jpg /usr/share/jitsi-meet/images/header.jpg
 ln -sf /var/www/jitsi-meet/${FQDN}/images/header.png /usr/share/jitsi-meet/images/header.png
+ln -sf /var/www/jitsi-meet/${FQDN}/images/waving-hand.svg /usr/share/jitsi-meet/images/waving-hand.svg
+ln -sf /var/www/jitsi-meet/${FQDN}/static/close3.html /usr/share/jitsi-meet/static/close3.html
 
 # rename files from default to your local environment (your vars in your env)
 # your legal notice comes from a different folder 
 mv -f /opt/apps/_temp/repo/web/default/css/styles.css /var/www/jitsi-meet/${FQDN}/static/css/styles.css
 
 # TODO: remove mkdir - folder already exists in repo, otherwise symlinking (see above) would fail  
-mkdir -p /var/www/jitsi-meet/${FQDN}/static/images
-mv -f /opt/apps/_temp/repo/web/default/images/favicon.ico /var/www/jitsi-meet/${FQDN}/static/images/favicon.ico
+# mkdir -p /var/www/jitsi-meet/${FQDN}/static/images
+# mv -f /opt/apps/_temp/repo/web/default/images/favicon.ico /var/www/jitsi-meet/${FQDN}/static/images/favicon.ico
 # renaming and parsing
 sed -e "s/{{FILENAME_LEGAL_NOTICE}}/${FILENAME_LEGAL_NOTICE}/g" \
 -e "s/{{FILENAME_PRIVACY_POLICY}}/${FILENAME_PRIVACY_POLICY}/g" /opt/apps/_temp/repo/web/default/html/legal-notice/legal-notice_de.html > /var/www/jitsi-meet/${FQDN}/static/${FILENAME_LEGAL_NOTICE}
