@@ -82,10 +82,9 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
 :root {
     --white: #ffffff;
     --lightgrey: #e6e6e6;
-    --darkgrey: #474747;
+    --darkgrey: #272727;
     --hf_blue: #0066B3;
     --hf_yellow: #FFCB04;
-    --nwp_background: #E1EDF4; 
   }
 
 .body, .html {
@@ -158,10 +157,11 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
 .be-footer {
     margin-top: 30px; 
     line-height: 1.7; 
-    position: absolute;
+    position: absolute !important;
     width: 100%;
+    height: 40px;
     bottom: 0;
-    background: var(--darkgrey); 
+    background: var(--darkgrey) !important; 
 }
 
 .be-footer-about {
@@ -201,15 +201,72 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
 
 .header {
     height: 385px;
-    background-position: center !important;
+    /* background-position: center !important;
     background-repeat: no-repeat !important;
     background-color:#E1EDF4 !important;
-    background-size: auto !important;
+    background-size: auto !important; */
     /* background-size: auto !important; */ /* uncomment this if you use a centered background with same background-color (left and right) */
-    background-image: url(../../images/header.png) !important;
+    /* background-image: url(../../images/header.png) !important;*/
+    background-image: none !important;
 }
 
 .header-text-title, 
 .header-text-subtitle {
-    color: var(--darkgrey) !important;
+    color: var(--lightgrey) !important;
 }
+
+.welcome {
+    background-color: var(--darkgrey) !important;
+}
+
+.welcome-card--blue {
+    background: var(--lightgrey) !important;
+}
+
+.header, .welcome .header {
+    background: var(--darkgrey) !important; 
+}
+
+.welcome .header .header-container {
+    margin: 0 !important;
+    max-width: 100% !important;
+}
+
+.header-container {
+    padding-top: 40px !important;
+}
+
+.welcome .header .header-watermark-container {
+    margin-top: 0 !important;
+}
+
+.welcome .welcome-watermark .watermark.leftwatermark {
+    width: 80px !important;
+    height: 80px !important;
+}
+
+.welcome .welcome-page-settings {
+    right: 80px !important;
+    top: 80px !important;
+}
+
+.watermark, .leftwatermark {
+    top: 0px !important;
+    left: 0px !important;
+}
+
+.watermark .leftwatermark {
+    top: 40px !important;
+    left: 40px !important;
+    margin: 0 0 0 40px !important;
+}
+.welcome .welcome-page-settings {
+    background: none !important;
+    top: 40px !important;
+    right: 40px !important;
+}
+
+.welcome .welcome-page-settings:hover, .welcome-page-settings:hover {
+    background: none !important;
+}
+
