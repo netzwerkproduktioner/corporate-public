@@ -94,9 +94,11 @@ systemctl restart jitsi-videobridge2
 # setup your custom frontend 
 # parse static files before moving them  
 
-STATIC_FILES=("close3.html")
+# NOTICE: no blanks in file name allowed!
+# iterator separates at blanks
+STATIC_FILES="close3.html close2.html" 
 
-for FILE in ${STATIC_FILES[@]}
+for FILE in ${STATIC_FILES}
 do
     # replace domain-placeholder in current file  
     CONTENT_REPLACEMENT=$(sed -e "s/{{FQDN}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/static/${FILE})
