@@ -278,4 +278,6 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
 div#videospace div.leftwatermark.watermark {
     background-position: 50% 50%;
     margin: 0 !important;
+    width: 160px;
+    height: 160px;
 }
