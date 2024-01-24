@@ -101,10 +101,10 @@ STATIC_FILES="close3.html close2.html"
 for FILE in ${STATIC_FILES}
 do
     # replace domain-placeholder in current file  
-    CONTENT_REPLACEMENT=$(sed -e "s/{{FQDN}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/static/${FILE})
+    CONTENT_REPLACEMENT=$(sed -e "s/{{FQDN}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/static/${FILE})
     # temp file 
     # note: echo with double quotes to keep the line breaks..
-    echo "${CONTENT_REPLACEMENT}" > ${FILE}
+    echo "${CONTENT_REPLACEMENT}" > ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/static/${FILE}
 done
 
 # move files
@@ -113,7 +113,7 @@ mv -f ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/* /var/www/jitsi-meet/${FQD
 
 # symlink files from directory outside the default installation into the installation paths 
 ln -sf /var/www/jitsi-meet/${FQDN}/images/watermark.svg /usr/share/jitsi-meet/images/watermark.svg
-ln -sf /var/www/jitsi-meet/${FQDN}/images/favicon.ico /usr/share/jitsi-meet/images/favicon.ico
+ln -sf /var/www/jitsi-meet/${FQDN}/images/favicon.ico /usr/share/jitsi-meet/favicon.ico
 ln -sf /var/www/jitsi-meet/${FQDN}/css/all.css /usr/share/jitsi-meet/css/all.css
 ln -sf /var/www/jitsi-meet/${FQDN}/static/css /usr/share/jitsi-meet/static/css
 ln -sf /var/www/jitsi-meet/${FQDN}/static/images /usr/share/jitsi-meet/static/images
