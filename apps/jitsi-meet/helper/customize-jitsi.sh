@@ -210,6 +210,10 @@ sed -i "\$a AllowUsers ${SSH_USERS}" /etc/ssh/sshd_config
 
 systemctl restart sshd
 
+# override firewall settings from cloud-init.yaml  
+# close the default ssh port
+ufw deny 22/tcp 
+
 # housekeeping
 rm -R /opt/apps/_temp
 rm -R /opt/apps/jitsi-meet/custom-frontend
