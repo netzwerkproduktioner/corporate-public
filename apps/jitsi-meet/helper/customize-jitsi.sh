@@ -30,14 +30,48 @@ else
     mkdir -p ${CUSTOMIZATIONS_PATH}
 fi
 
+#################
+#
 # checkout your repository with your custom files. 
+# organizing downloaded files  
+#
+#################
 # after checkout specific files get picked, other files the repo are removed after setup 
+# expects the following repo structure:  
+# +-- ./
+# |   +-- apps
+# |   |   +-- jitsi-meet 
+# |   |   |   +-- configs
+# |   |   |   +-- custom-frontend
+# |   |   |   |   +-- subdomain.domain.tld (folder) 
+# |   |   |   |   |   +-- css
+# |   |   |   |   |   +-- images
+# |   |   |   |   |   +-- static
+# |   |   |   |   |   |   +-- privacy-policy-jitsi_de.html
+# |   |   |   |   |   |   +-- welcome.html
+# |   |   |   |   |   |   +-- close3.html
+# |   |   |   +-- helper
+# |   +-- web
+# |   |   +-- default
+# |   |   |   +-- css
+# |   |   |   |   +-- styles.css
+# |   |   |   +-- html  
+# |   |   |   |   +-- legal-notice
+# |   |   |   |   |   +-- legal-notice_de.html
+# |   +-- <other files/folders>
+
 # CUSTOMIZATIONS_PATH=/opt/apps/jitsi-meet/
 git clone ${CUSTOMIZATIONS_REPO} /opt/apps/_temp/repo
 mv -f /opt/apps/_temp/repo/apps/jitsi-meet/* ${CUSTOMIZATIONS_PATH}/
 
 # renames default folder to local customization 
 mv -f ${CUSTOMIZATIONS_PATH}/custom-frontend/subdomain.domain.tld/ ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/
+
+#################
+# 
+# modifying and organizing config files
+#
+#################
 
 # modifying cfg.lua
 # extract the password 
@@ -67,21 +101,17 @@ sed "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/configs/domain
 # expected pattern in jicofo.conf: password: "<chars>" 
 JICOFO_PASSWORD=$(sed -n 's/ \{0,\}password: \"\(.*\)\"$/\1/p' /etc/jitsi/jicofo/jicofo.conf)
 
-
 sed -e "s/{{JICOFO_PASSWORD}}/${JICOFO_PASSWORD}/g" \
 -e "s/{{SUBDOMAIN.DOMAIN.TLD}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/configs/jicofo-template.conf > /etc/jitsi/jicofo/jicofo.conf
 
 mv -f ${CUSTOMIZATIONS_PATH}/configs/interface_config-template.js ${CUSTOMIZATIONS_PATH}/configs/interface_config.js
 ln -sf ${CUSTOMIZATIONS_PATH}/configs/interface_config.js /usr/share/jitsi-meet/interface_config.js
+
+# language files
 ln -sf ${CUSTOMIZATIONS_PATH}/configs/main-de.json /usr/share/jitsi-meet/lang/main-de.json
 ln -sf ${CUSTOMIZATIONS_PATH}/configs/main.json /usr/share/jitsi-meet/lang/main.json
 
-# reloads modified config file
-systemctl restart prosody
-systemctl restart jicofo
-systemctl restart jitsi-videobridge2
-
-# adds new user
+# adds new user (XMPP)
 # NOTE: register has no flags (instead ejabberd..) @see man prosodyctl  
 prosodyctl register ${PROSODY_USER} ${FQDN} ${PROSODY_PASSWORD}
 systemctl restart prosody
@@ -90,9 +120,17 @@ systemctl restart prosody
 systemctl restart jicofo
 systemctl restart jitsi-videobridge2
 
+#################
+# 
+# setup your custom jitsi frontend 
+#
+#################
 
-# setup your custom frontend 
-# parse static files before moving them  
+# move files
+mkdir -p /var/www/jitsi-meet/${FQDN}
+mv -f ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/* /var/www/jitsi-meet/${FQDN}/
+
+# symlink files from directory outside the default installation into the installation paths 
 
 # NOTICE: no blanks in file name allowed!
 # iterator separates at blanks
@@ -101,58 +139,60 @@ STATIC_FILES="close3.html close2.html"
 for FILE in ${STATIC_FILES}
 do
     # replace domain-placeholder in current file  
-    CONTENT_REPLACEMENT=$(sed -e "s/{{FQDN}}/${FQDN}/g" ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/static/${FILE})
+    CONTENT_REPLACEMENT=$(sed -e "s/{{FQDN}}/${FQDN}/g" /var/www/jitsi-meet/${FQDN}/static/${FILE})
     # temp file 
     # note: echo with double quotes to keep the line breaks..
-    echo "${CONTENT_REPLACEMENT}" > ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/static/${FILE}
+    echo "${CONTENT_REPLACEMENT}" > /var/www/jitsi-meet/${FQDN}/static/${FILE}
+    # symlink file 
+    ln -sf /var/www/jitsi-meet/${FQDN}/static/${FILE} /usr/share/jitsi-meet/static/${FILE}
 done
 
-# move files
-mkdir -p /var/www/jitsi-meet/${FQDN}
-mv -f ${CUSTOMIZATIONS_PATH}/custom-frontend/${FQDN}/* /var/www/jitsi-meet/${FQDN}/
-
-# symlink files from directory outside the default installation into the installation paths 
-ln -sf /var/www/jitsi-meet/${FQDN}/images/watermark.svg /usr/share/jitsi-meet/images/watermark.svg
-ln -sf /var/www/jitsi-meet/${FQDN}/images/favicon.ico /usr/share/jitsi-meet/favicon.ico
-ln -sf /var/www/jitsi-meet/${FQDN}/css/all.css /usr/share/jitsi-meet/css/all.css
-ln -sf /var/www/jitsi-meet/${FQDN}/static/css /usr/share/jitsi-meet/static/css
-# ln -sf /var/www/jitsi-meet/${FQDN}/static/images /usr/share/jitsi-meet/static/images
-
-ln -sf /var/www/jitsi-meet/${FQDN}/images/header.jpg /usr/share/jitsi-meet/images/header.jpg
-ln -sf /var/www/jitsi-meet/${FQDN}/images/header.png /usr/share/jitsi-meet/images/header.png
-ln -sf /var/www/jitsi-meet/${FQDN}/images/waving-hand.svg /usr/share/jitsi-meet/images/waving-hand.svg
-ln -sf /var/www/jitsi-meet/${FQDN}/static/close3.html /usr/share/jitsi-meet/static/close3.html
-
-# rename files from default to your local environment (your vars in your env)
-# your legal notice comes from a different folder 
-mv -f /opt/apps/_temp/repo/web/default/css/styles.css /var/www/jitsi-meet/${FQDN}/static/css/styles.css
-
-# TODO: remove mkdir - folder already exists in repo, otherwise symlinking (see above) would fail  
-# mkdir -p /var/www/jitsi-meet/${FQDN}/static/images
-# mv -f /opt/apps/_temp/repo/web/default/images/favicon.ico /var/www/jitsi-meet/${FQDN}/static/images/favicon.ico
-# renaming and parsing
-sed -e "s/{{FILENAME_LEGAL_NOTICE}}/${FILENAME_LEGAL_NOTICE}/g" \
--e "s/{{FILENAME_PRIVACY_POLICY}}/${FILENAME_PRIVACY_POLICY}/g" /opt/apps/_temp/repo/web/default/html/legal-notice/legal-notice_de.html > /var/www/jitsi-meet/${FQDN}/static/${FILENAME_LEGAL_NOTICE}
-
-mv -f /var/www/jitsi-meet/${FQDN}/static/privacy-policy-jitsi_de.html /var/www/jitsi-meet/${FQDN}/static/${FILENAME_PRIVACY_POLICY}
-
-ln -sf /var/www/jitsi-meet/${FQDN}/static/${FILENAME_LEGAL_NOTICE} /usr/share/jitsi-meet/static/${FILENAME_LEGAL_NOTICE}
-ln -sf /var/www/jitsi-meet/${FQDN}/static/${FILENAME_PRIVACY_POLICY} /usr/share/jitsi-meet/static/${FILENAME_PRIVACY_POLICY}
-
-# replace default welcome page with your custom page
+# replace placeholder in welcome page with your custom page
 # troubleshooting sed @see: https://www.gnu.org/software/sed/manual/html_node/Multiple-commands-syntax.html 
 sed -e "s/{{FQDN}}/${FQDN}/g" \
 -e "s/{{NAME_LEGAL_NOTICE}}/${NAME_LEGAL_NOTICE}/g" \
 -e "s/{{NAME_PRIVACY_POLICY}}/${NAME_PRIVACY_POLICY}/g" \
 -e "s/{{FILENAME_LEGAL_NOTICE}}/${FILENAME_LEGAL_NOTICE}/g" \
 -e "s/{{FILENAME_PRIVACY_POLICY}}/${FILENAME_PRIVACY_POLICY}/g" /var/www/jitsi-meet/${FQDN}/static/welcome.html > /var/www/jitsi-meet/${FQDN}/static/welcomePageAdditionalContent.html
-rm /var/www/jitsi-meet/${FQDN}/static/welcome.html
 
+rm /var/www/jitsi-meet/${FQDN}/static/welcome.html
 ln -sf /var/www/jitsi-meet/${FQDN}/static/welcomePageAdditionalContent.html /usr/share/jitsi-meet/static/welcomePageAdditionalContent.html
+
+# symlink image files  
+IMAGE_FILES="watermark.svg header.jpg header.png waving-hand.svg"
+
+for FILE in ${IMAGE_FILES}
+do
+    # symlink to ../jitsi-meet/images (no changes to filenames)
+    ln -sf /var/www/jitsi-meet/${FQDN}/images/${FILE} /usr/share/jitsi-meet/images/${FILE}
+done
+
+# symlink single files to ../jitsi-meet
+ln -sf /var/www/jitsi-meet/${FQDN}/css/all.css /usr/share/jitsi-meet/css/all.css
+ln -sf /var/www/jitsi-meet/${FQDN}/static/css /usr/share/jitsi-meet/static/css
+ln -sf /var/www/jitsi-meet/${FQDN}/images/favicon.ico /usr/share/jitsi-meet/favicon.ico
+
+#################
+# 
+# setup your additional custom files (legal notice, privacy policy, ..)
+#
+#################
+# rename files from default to your local environment (your vars in your env)
+# your legal notice comes from a different folder from your repo
+mv -f /opt/apps/_temp/repo/web/default/css/styles.css /var/www/jitsi-meet/${FQDN}/static/css/styles.css
+
+# renaming and parsing files to destination folder  
+sed -e "s/{{FILENAME_LEGAL_NOTICE}}/${FILENAME_LEGAL_NOTICE}/g" \
+-e "s/{{FILENAME_PRIVACY_POLICY}}/${FILENAME_PRIVACY_POLICY}/g" /opt/apps/_temp/repo/web/default/html/legal-notice/legal-notice_de.html > /var/www/jitsi-meet/${FQDN}/static/${FILENAME_LEGAL_NOTICE}
+ln -sf /var/www/jitsi-meet/${FQDN}/static/${FILENAME_LEGAL_NOTICE} /usr/share/jitsi-meet/static/${FILENAME_LEGAL_NOTICE}
+
+mv -f /var/www/jitsi-meet/${FQDN}/static/privacy-policy-jitsi_de.html /var/www/jitsi-meet/${FQDN}/static/${FILENAME_PRIVACY_POLICY}
+ln -sf /var/www/jitsi-meet/${FQDN}/static/${FILENAME_PRIVACY_POLICY} /usr/share/jitsi-meet/static/${FILENAME_PRIVACY_POLICY}
 
 # housekeeping
 rm -R /opt/apps/_temp
 rm -R /opt/apps/jitsi-meet/custom-frontend
 rm -R /opt/apps/jitsi-meet/helper
-# rm -R /opt/.env
-# rm /opt/customize-jitsi.sh
+
+rm /opt/.env
+rm /opt/customize-jitsi.sh
