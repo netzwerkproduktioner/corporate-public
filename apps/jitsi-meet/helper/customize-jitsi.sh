@@ -206,7 +206,7 @@ sed -i -e "/^\(#\|\)AuthorizedKeysFile/s/^.*$/AuthorizedKeysFile .ssh\/authorize
 
 # set allowed users  
 # more than one user: user name separated by blanks  
-sed -i "$a AllowUsers ${SSH_USERS}" /etc/ssh/sshd_config
+sed -i "\$a AllowUsers ${SSH_USERS}" /etc/ssh/sshd_config
 
 systemctl restart sshd
 
