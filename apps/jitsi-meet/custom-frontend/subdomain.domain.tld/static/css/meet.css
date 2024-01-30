@@ -83,8 +83,6 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
     --white: #ffffff;
     --lightgrey: #e6e6e6;
     --darkgrey: #272727;
-    --hf_blue: #0066B3;
-    --hf_yellow: #FFCB04;
   }
 
 .body, .html {
@@ -98,7 +96,7 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: var(--hf_blue);
+    background-color: var(--darkgrey);
 }
 
 .nav-sub {
@@ -137,7 +135,7 @@ You can get a copy of the license under: https://www.apache.org/licenses/LICENSE
 
 .imprint a, 
 .imprint a:visited {
-    color: var(--hf_blue);
+    color: var(--darkgrey);
 }
 .imprint a:active,
 .imprint a:hover {
