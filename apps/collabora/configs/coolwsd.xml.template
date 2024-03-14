@@ -267,7 +267,7 @@
     </remote_config>
     <stop_on_config_change desc="Stop coolwsd whenever config files change." type="bool" default="false">false</stop_on_config_change>
     <remote_font_config>
-        <url desc="URL of optional JSON file that lists fonts to be included in Online" type="string" default=""></url>
+        <url desc="URL of optional JSON file that lists fonts to be included in Online" type="string" default="">{{CUSTOM_REMOTE_FONTS_URL}}</url>
     </remote_font_config>
     <home_mode>
         <enable desc="Enable more configuration options for home users" type="bool" default="false">false</enable>

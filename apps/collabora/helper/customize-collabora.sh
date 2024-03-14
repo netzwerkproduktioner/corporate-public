@@ -44,7 +44,8 @@ do
 done
 
 # do the replacement in config file  
-sed -e "s~{{CUSTOM_GROUPS}}~${CODEBLOCK}~g" ./coolwsd.xml.template > ./coolwsd.xml
+sed -e "s~{{CUSTOM_GROUPS}}~${CODEBLOCK}~g" \
+-e "s/{{CUSTOM_REMOTE_FONTS_URL}}/${CUSTOM_REMOTE_FONTS_URL}/g" ./coolwsd.xml.template > ./coolwsd.xml
 
 ##############################################################################
 # *** CUSTOM HTML ***
