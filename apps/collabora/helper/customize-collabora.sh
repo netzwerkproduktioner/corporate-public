@@ -45,3 +45,34 @@ done
 
 # do the replacement in config file  
 sed -e "s~{{CUSTOM_GROUPS}}~${CODEBLOCK}~g" ./coolwsd.xml.template > ./coolwsd.xml
+
+##############################################################################
+# *** CUSTOM HTML ***
+# get your custom files to override Onlyoffice default html files  
+# remember: curl -f : fails silenty -o writes source file to destination filename  
+##############################################################################
+
+# mkdir -p /var/www/collabora/html/
+# directory already created in write_files section
+# 
+mkdir -p ${APP_PATH}/html
+mkdir -p ${APP_PATH}/html/css
+curl -fo ${APP_PATH}/html/legal-notice_de.html "https://raw.githubusercontent.com/netzwerkproduktioner/corporate-public/main/web/default/html/legal-notice/legal-notice_de.html"
+curl -fo ${APP_PATH}/html/privacy-policy_de.html "https://raw.githubusercontent.com/netzwerkproduktioner/corporate-public/main/web/default/html/privacy-policy/privacy-policy_de.html"
+curl -fo ${APP_PATH}/html/favicon.ico "https://raw.githubusercontent.com/netzwerkproduktioner/corporate-public/main/web/default/images/favicon.ico"
+curl -fo ${APP_PATH}/html/css/styles.css "https://raw.githubusercontent.com/netzwerkproduktioner/corporate-public/main/web/default/css/styles.css"
+
+# move css to destination folder  
+mv -f ${APP_PATH}/html/css/ /var/www/collabora/html/
+
+# renaming and parsing legal-notice to destination folder  
+sed -e "s/{{FILENAME_LEGAL_NOTICE}}/${FILENAME_LEGAL_NOTICE}/g" \
+-e "s/{{FILENAME_PRIVACY_POLICY}}/${FILENAME_PRIVACY_POLICY}/g" ${APP_PATH}/html/legal-notice_de.html > /var/www/collabora/html/${FILENAME_LEGAL_NOTICE}
+rm ${APP_PATH}/html/legal-notice_de.html
+
+# move and rename privacy-policy  
+mv -f ${APP_PATH}/html/privacy-policy_de.html /var/www/collabora/html/${FILENAME_PRIVACY_POLICY}
+
+# move the rest
+mv -f ${APP_PATH}/html/* /var/www/collabora/html
+rm -R ${APP_PATH}/html
