@@ -45,8 +45,12 @@ done
 
 # do the replacement in config file  
 # replaces with the placeholder/default if var(s) is empty  
-sed -e "s~{{CUSTOM_GROUPS}}~${CODEBLOCK:-'{{CUSTOM_GROUPS}}'}~g" \
--e "s~{{CUSTOM_REMOTE_FONTS_URL}}~${CUSTOM_REMOTE_FONTS_URL:-'{{CUSTOM_REMOTE_FONTS_URL}}'}~g" ${APP_PATH}/coolwsd.xml.template > ${APP_PATH}/coolwsd.xml
+
+CODEBLOCK=${CODEBLOCK:-'{{CUSTOM_GROUPS}}'}
+CUSTOM_REMOTE_FONTS_URL=${CUSTOM_REMOTE_FONTS_URL:-'{{CUSTOM_REMOTE_FONTS_URL}}'}
+
+sed -e "s~{{CUSTOM_GROUPS}}~${CODEBLOCK}~g" \
+-e "s~{{CUSTOM_REMOTE_FONTS_URL}}~${CUSTOM_REMOTE_FONTS_URL}~g" ${APP_PATH}/coolwsd.xml.template > ${APP_PATH}/coolwsd.xml
 
 ##############################################################################
 # *** CUSTOM HTML ***
