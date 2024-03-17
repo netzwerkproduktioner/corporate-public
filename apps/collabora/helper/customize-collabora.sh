@@ -20,6 +20,9 @@ APP_PATH=${1:-'/opt/apps/collabora'}
 # 
 # Every entry must consist as follows: subdomain.domain.tld:port  
 DOMAIN_LIST=${2:-${DOMAIN_LIST:?'no parameter given!'}}
+
+# Your CODEBLOCK to register allowed servers (in groups) is generated automatically.  
+# This var should be empty but declared at the beginning.  
 CODEBLOCK=""
 
 for DOMAIN in ${DOMAIN_LIST}
@@ -27,9 +30,10 @@ do
     # split string into parts  
     NUMBER_OF_PARTS=$(echo $DOMAIN | awk -F'\\.|\\:' '{ print NF }')
 
+    # you get the pattern: 'subdomain domain tld port' (separated by white spaces)  
     SPLITTED_DOMAIN_STRING=$(echo $DOMAIN | awk -F'\\.|\\:' '{ for (i=1;i<=NF;i++) print $i }')
 
-    # take parts as positional params  
+    # take parts as positional params (1..4)  
     set -- ${SPLITTED_DOMAIN_STRING}
 
     # assign parts to placeholders  
@@ -43,24 +47,24 @@ do
     CODEBLOCK="${CODEBLOCK}${CODE_FRAGMENT}\\n            "
 done
 
-# do the replacement in config file  
 # replaces with the placeholder/default if var(s) is empty  
-
 CODEBLOCK=${CODEBLOCK:-'{{CUSTOM_GROUPS}}'}
 CUSTOM_REMOTE_FONTS_URL=${CUSTOM_REMOTE_FONTS_URL:-'{{CUSTOM_REMOTE_FONTS_URL}}'}
 
+# do the replacement in config file  
 sed -e "s~{{CUSTOM_GROUPS}}~${CODEBLOCK}~g" \
 -e "s~{{CUSTOM_REMOTE_FONTS_URL}}~${CUSTOM_REMOTE_FONTS_URL}~g" ${APP_PATH}/coolwsd.xml.template > ${APP_PATH}/coolwsd.xml
 
 ##############################################################################
 # *** CUSTOM HTML ***
-# get your custom files to override Onlyoffice default html files  
+# get your custom html files   
 # remember: curl -f : fails silenty -o writes source file to destination filename  
 ##############################################################################
 
 # mkdir -p /var/www/collabora/html/
 # directory already created in write_files section
-# 
+
+# create folders and get files  
 mkdir -p ${APP_PATH}/html
 mkdir -p ${APP_PATH}/html/css
 curl -fo ${APP_PATH}/html/legal-notice_de.html "https://raw.githubusercontent.com/netzwerkproduktioner/corporate-public/main/web/default/html/legal-notice/legal-notice_de.html"
@@ -72,6 +76,7 @@ curl -fo ${APP_PATH}/html/css/styles.css "https://raw.githubusercontent.com/netz
 mv -f ${APP_PATH}/html/css/ /var/www/collabora/html/
 
 # renaming and parsing legal-notice to destination folder  
+# depending on your settings in your .env file  
 sed -e "s/{{FILENAME_LEGAL_NOTICE}}/${FILENAME_LEGAL_NOTICE}/g" \
 -e "s/{{FILENAME_PRIVACY_POLICY}}/${FILENAME_PRIVACY_POLICY}/g" ${APP_PATH}/html/legal-notice_de.html > /var/www/collabora/html/${FILENAME_LEGAL_NOTICE}
 rm ${APP_PATH}/html/legal-notice_de.html
@@ -79,6 +84,6 @@ rm ${APP_PATH}/html/legal-notice_de.html
 # move and rename privacy-policy  
 mv -f ${APP_PATH}/html/privacy-policy_de.html /var/www/collabora/html/${FILENAME_PRIVACY_POLICY}
 
-# move the rest
+# move the other files and cleanup
 mv -f ${APP_PATH}/html/* /var/www/collabora/html
 rm -R ${APP_PATH}/html
