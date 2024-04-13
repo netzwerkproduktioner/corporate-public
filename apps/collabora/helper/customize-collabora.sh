@@ -30,17 +30,27 @@ do
     # split string into parts  
     NUMBER_OF_PARTS=$(echo $DOMAIN | awk -F'\\.|\\:' '{ print NF }')
 
-    # you get the pattern: 'subdomain domain tld port' (separated by white spaces)  
+    # you get the pattern: 'subdomain subdomain2 .. domain tld port' (separated by white spaces)  
     SPLITTED_DOMAIN_STRING=$(echo $DOMAIN | awk -F'\\.|\\:' '{ for (i=1;i<=NF;i++) print $i }')
 
-    # take parts as positional params (1..4)  
+    # take parts as positional params
     set -- ${SPLITTED_DOMAIN_STRING}
 
+    # NOTE: There can be more than one subdomain: but the last params are determinated as .. 'domain', 'tld', 'port'  
+    # NOTE: Second level domains are NOT SUPPORTED YET!
+
     # assign parts to placeholders  
-    SUBDOMAIN=$1
-    DOMAIN=$2
-    TLD=$3
-    PORT=$4
+    # 'port' is the last parameter seen backwards
+    PORT=${@:$#:1}
+    # 'tld' is the second parameter (last one minus 1) seen backwards 
+    TLD=${@:$#-1:1}
+    # 'domain' is the 3rd parameter..you got it..
+    DOMAIN=${@:$#-2:1}
+
+    # get everything from the 3rd position counting from backwards  
+    SUBDOMAIN=$(echo ${@:1:$#-3}) 
+    # replace blanks with dots
+    SUBDOMAIN=${SUBDOMAIN// /.}
 
     # build PREFORMATED code string  
     CODE_FRAGMENT="\<group>\\n                <host desc=\"hostname to allow or deny.\" allow=\"true\">https:\/\/${SUBDOMAIN}.${DOMAIN}.${TLD}:${PORT}\<\/host>\\n                <alias desc=\"regex pattern of aliasname\">https:\/\/${SUBDOMAIN}[0-9]{1}\\\.${DOMAIN}\\\.${TLD}:${PORT}\<\/alias>\\n            </group>"
