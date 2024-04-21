@@ -53,6 +53,7 @@ do
     SUBDOMAIN=${SUBDOMAIN// /.}
 
     # build PREFORMATED code string  
+    # NOTE: keep the blanks (intention for xml-file)!
     CODE_FRAGMENT="\<group>\\n                <host desc=\"hostname to allow or deny.\" allow=\"true\">https:\/\/${SUBDOMAIN}.${DOMAIN}.${TLD}:${PORT}\<\/host>\\n                <alias desc=\"regex pattern of aliasname\">https:\/\/${SUBDOMAIN}[0-9]{1}\\\.${DOMAIN}\\\.${TLD}:${PORT}\<\/alias>\\n            </group>"
     CODEBLOCK="${CODEBLOCK}${CODE_FRAGMENT}\\n            "
 done
