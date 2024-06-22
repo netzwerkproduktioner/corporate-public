@@ -78,9 +78,10 @@ sed -e "s~{{CUSTOM_GROUPS}}~${CODEBLOCK}~g" \
 # create folders and get files  
 mkdir -p ${APP_PATH}/html
 mkdir -p ${APP_PATH}/html/css
+mkdir -p ${APP_PATH}/html/images
 curl -fo ${APP_PATH}/html/legal-notice_de.html "https://raw.githubusercontent.com/netzwerkproduktioner/corporate-public/main/web/default/html/legal-notice/legal-notice_de.html"
 curl -fo ${APP_PATH}/html/privacy-policy_de.html "https://raw.githubusercontent.com/netzwerkproduktioner/corporate-public/main/web/default/html/privacy-policy/privacy-policy_de.html"
-curl -fo ${APP_PATH}/html/favicon.ico "https://raw.githubusercontent.com/netzwerkproduktioner/corporate-public/main/web/default/images/favicon.ico"
+curl -fo ${APP_PATH}/html/images/favicon.ico "https://raw.githubusercontent.com/netzwerkproduktioner/corporate-public/main/web/default/images/favicon.ico"
 curl -fo ${APP_PATH}/html/css/styles.css "https://raw.githubusercontent.com/netzwerkproduktioner/corporate-public/main/web/default/css/styles.css"
 
 # move css to destination folder  
