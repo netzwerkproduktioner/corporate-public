@@ -27,7 +27,9 @@ TEMPLATE_NAMES=${FQDN_TEMPLATES:-''}
 cd ${APP_PATH}/custom-frontends
 FOLDER_NAME_LIST=$(echo *)
 cd - > /dev/null
+
 count=1
+FQDN_LIST=''
 
 fn_AddToList() {
     # expects $1 as the list
