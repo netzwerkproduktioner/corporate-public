@@ -1,6 +1,0 @@
-**/*.afphoto
-**/*.afdesign
-**/*.psd
-**/*.ai
-**/TODO.*
-!.gitignore
