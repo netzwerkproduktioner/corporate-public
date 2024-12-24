@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <link rel='stylesheet' href='css/styles.css' type='text/css' media='all' />
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
-    <title>Datenschutz</title>
+    <title>{{NAME_PRIVACY_POLICY}}</title>
 </head>
 <body>
     <main>
         <section class="business-main">
             <article>
-                <h1>Datenschutzerklärung</h1>
+                <h1>{{NAME_PRIVACY_POLICY}}</h1>
                 <h2>Informationen zum Daten­schutz</h2>
                 <p>
                 Mit dieser Datenschutzerklärung möchten wir (im folgenden „Anbieter“) Sie als NutzerIn über den Umfang der Erhebung personenbezogener Daten bei Aufruf und Nutzung unserer  Internetseiten informieren. Ferner werden der Zweck der Datenerhebung und deren Verwendung bzw. Verarbeitung (Artikel 4, DSGVO) dargestellt.</p>
