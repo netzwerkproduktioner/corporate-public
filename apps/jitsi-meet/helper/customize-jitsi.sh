@@ -7,6 +7,27 @@
 #
 #################
 
+#################
+#
+# Updating..
+#
+#################
+# currently there are problems with default installation from Hetzner
+# you have to run update and upgrade after successfully ran the one-click-installer  
+# jitsi-meet-prosody: Installed: 1.0.8302-1
+# jitsi-meet: Installed: 2.0.9909-1
+apt-get update && apt-get -yyq upgrade
+
+systemctl restart prosody
+systemctl restart jicofo
+systemctl restart jitsi-videobridge2
+
+#################
+# some vars used in this script
+count=1
+CERTBOT_DOMAINS=
+
+#################
 APP_PATH=${1:-'/opt/apps/jitsi-meet'}
 
 # be aware that your vars are set and your .env is loaded ..
@@ -14,22 +35,16 @@ APP_PATH=${1:-'/opt/apps/jitsi-meet'}
 # remember: set values for vars (for this script) in your env file  
 . ${APP_PATH}/.env
 
-# build domain string  
-FQDN_AUTH=${FQDN_AUTH:-''}
-
 # create simple list from frontend-folder
 # NOTE: folder names will be set as adresses and expected to be in that form: subdomain.domain.tld  
 
 # ORDERED list of template names
 # NOTE: let var empty to use the folder names as given in your directory  
-TEMPLATE_NAMES=${FQDN_TEMPLATES:-''}
+TEMPLATE_NAMES="${FQDN_TEMPLATES}:-'subdomain1.domain.tld subdomain2.domain.tld'"
 
 cd ${APP_PATH}/custom-frontends
 FOLDER_NAME_LIST=$(echo *)
 cd - > /dev/null
-
-count=1
-FQDN_LIST=''
 
 fn_AddToList() {
     # expects $1 as the list
@@ -55,12 +70,11 @@ then
         else
             :          
         fi
-        ((count++))
+        count=$( expr ${count} + 1 )
     done
 else
     :
 fi
-
 
 for FQDN in ${FQDN_LIST}
 do
@@ -177,8 +191,32 @@ do
     -e "s~{{NAME_PRIVACY_POLICY}}~${NAME_PRIVACY_POLICY}~g" ${APP_PATH}/custom-frontends/${FQDN}/templates/static/privacy-policy-jitsi_de.html.template > ${APP_PATH}/custom-frontends/${FQDN}/static/${FILENAME_PRIVACY_POLICY}
     ln -sf ${APP_PATH}/custom-frontends/${FQDN}/static/${FILENAME_PRIVACY_POLICY} /var/www/${FQDN}/static/${FILENAME_PRIVACY_POLICY}
 
+    # lets replace some things..
+    # awk
+    # the regexp '/server {/' grabs everthing starting with 'server {' until the next occurrence of '}' at the beginning auf line (with no intention) 
+    # the result is piped directly to sed  
+    # sed
+    # ^\([ ]*\)root - gets every blank from beginning of line followed by 'root', stored as group
+    # \(.*$\) - stores everyting after 'root' until end of line, into a group
+    # \1 first group (blanks..) are added before the replacement string 'root /var/..'  
+    # the result is written to new file in sites-available
+    awk '/server {/ {flag=1} flag; /^}/ {flag=0}' /etc/nginx/sites-available/${FQDN_AUTH}.conf | sed -e "s~^\([ ]*\)root\(.*$\)~\1root \/var\/www/${FQDN};~g" -e "s~${FQDN_AUTH}~${FQDN}~g" > /etc/nginx/sites-available/${FQDN}.conf
+
+    ln -sf /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf  
+
+    systemctl nginx reload
+
+    # prepare domain list for certbot..
+    CERTBOT_DOMAINS="${CERTBOT_DOMAINS} ${FQDN}"
+
 done
 
+# get missing certs..
+for DOMAIN in ${CERTBOT_DOMAINS}
+do
+    CERTBOT_DOMAIN_STRING="${CERTBOT_DOMAIN_STRING} -d ${DOMAIN}"
+done
+certbot certonly --nginx ${CERTBOT_DOMAIN_STRING}
 
 #################
 # 
@@ -265,3 +303,4 @@ systemctl restart nginx
 
 # housekeeping
 # rm -R /opt/apps/jitsi-meet/custom-frontends
+# rm /etc/nginx/sites-enabled/default
