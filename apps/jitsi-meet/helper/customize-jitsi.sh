@@ -95,8 +95,6 @@ else
     FQDN_LIST=$(fn_getTemplateFolderList ${APP_PATH})
 fi
 
-echo "DEBUG: ${FQDN_LIST}"
-
 #################
 # 
 # modifying and organizing config files
@@ -105,7 +103,9 @@ echo "DEBUG: ${FQDN_LIST}"
 
 fn_MofifyCfgLua() {
     # expects #1 parameter ${APP_PATH}
+    APP_PATH=${1}
     # expects #2 parameter ${FQDN}
+    FQDN=${2}
 
     # modifying cfg.lua
     # extract the password 
@@ -129,7 +129,9 @@ fn_MofifyCfgLua ${APP_PATH} ${FQDN_AUTH}
 
 fn_ModifyJicofoConf() {
     # expects #1 ${APP_PATH}
+    APP_PATH=${1}    
     # expects #2 ${FQDN}
+    FQDN=${2}
 
     # modifying jicofo.conf
     # extract the password
@@ -288,28 +290,23 @@ do
     # enable sites 
     ln -sf /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf
 
-    # prepare domain list for certbot..
-    CERTBOT_DOMAINS="${CERTBOT_DOMAINS}${FQDN},"
-
     fn_MofifyCfgLua ${APP_PATH} ${FQDN}
-    fn_ModifyJicofoConf ${APP_PATH} ${FQDN}
+    #fn_ModifyJicofoConf ${APP_PATH} ${FQDN}
+
+    # from the docs  
+    # certonly    Obtain or renew a certificate, but do not install it
+    # -d DOMAINS  Comma-separated list of domains to obtain a certificate for
+    # certbot certonly --nginx -d <comma separated domains>
+    # remove trailing comma
+    # certonly --standalone copies certs to /etc/letsencrypt/live/<FQDN>
+    # NOTE: to remove 'old' certificates you have to run: 
+    # certbot delete -n --cert-name <your-cert-name>
+    certbot certonly --standalone -d ${FQDN}
 
 done
 
-# from the docs  
-# certonly    Obtain or renew a certificate, but do not install it
-# -d DOMAINS  Comma-separated list of domains to obtain a certificate for
-# certbot certonly --nginx -d <comma separated domains>
-# remove trailing comma
-# certonly --standalone copies certs to /etc/letsencrypt/live/<FQDN>
-# NOTE: to remove 'old' certificates you have to run: 
-# certbot delete -n --cert-name <your-cert-name>
-CERTBOT_DOMAINS=$(echo ${CERTBOT_DOMAINS} | sed 's/,*$//g')
-certbot certonly --standalone -d ${CERTBOT_DOMAINS}
-
 # restart nginx after all operations above  
 systemctl start nginx
-
 
 # adds new user (XMPP)
 # NOTE: register has no flags (instead ejabberd..) @see man prosodyctl  
