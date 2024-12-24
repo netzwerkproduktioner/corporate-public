@@ -3,7 +3,7 @@ plugin_paths = { "/usr/share/jitsi-meet/prosody-plugins/" }
 -- domain mapper options, must at least have domain base set to use the mapper
 muc_mapper_domain_base = "{{SUBDOMAIN.DOMAIN.TLD}}";
 
-external_service_secret = "{{EXTERNAL_SERVICE_SECRET}}";
+external_service_secret = "6BrTeWaEXx1MZJqQ";
 external_services = {
      { type = "stun", host = "{{SUBDOMAIN.DOMAIN.TLD}}", port = 3478 },
      { type = "turn", host = "{{SUBDOMAIN.DOMAIN.TLD}}", port = 3478, transport = "udp", secret = true, ttl = 86400, algorithm = "turn" },
@@ -51,12 +51,10 @@ VirtualHost "{{SUBDOMAIN.DOMAIN.TLD}}"
     }
     av_moderation_component = "avmoderation.{{SUBDOMAIN.DOMAIN.TLD}}"
     speakerstats_component = "speakerstats.{{SUBDOMAIN.DOMAIN.TLD}}"
-    conference_duration_component = "conferenceduration.{{SUBDOMAIN.DOMAIN.TLD}}"
     end_conference_component = "endconference.{{SUBDOMAIN.DOMAIN.TLD}}"
     -- we need bosh
     modules_enabled = {
         "bosh";
-        "pubsub";
         "ping"; -- Enable mod_ping
         "speakerstats";
         "external_services";
@@ -77,6 +75,7 @@ VirtualHost "{{SUBDOMAIN.DOMAIN.TLD}}"
 VirtualHost "guest.{{SUBDOMAIN.DOMAIN.TLD}}"
     authentication = "anonymous"
     c2s_require_encryption = false
+
 
 Component "conference.{{SUBDOMAIN.DOMAIN.TLD}}" "muc"
     restrict_room_creation = true
@@ -129,17 +128,16 @@ VirtualHost "auth.{{SUBDOMAIN.DOMAIN.TLD}}"
     }
     modules_enabled = {
         "limits_exception";
+        "smacks";
     }
     authentication = "internal_hashed"
+    smacks_hibernation_time = 15;
 
 -- Proxy to jicofo's user JID, so that it doesn't have to register as a component.
 Component "focus.{{SUBDOMAIN.DOMAIN.TLD}}" "client_proxy"
     target_address = "focus@auth.{{SUBDOMAIN.DOMAIN.TLD}}"
 
 Component "speakerstats.{{SUBDOMAIN.DOMAIN.TLD}}" "speakerstats_component"
-    muc_component = "conference.{{SUBDOMAIN.DOMAIN.TLD}}"
-
-Component "conferenceduration.{{SUBDOMAIN.DOMAIN.TLD}}" "conference_duration_component"
     muc_component = "conference.{{SUBDOMAIN.DOMAIN.TLD}}"
 
 Component "endconference.{{SUBDOMAIN.DOMAIN.TLD}}" "end_conference"
