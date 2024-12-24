@@ -40,11 +40,16 @@ APP_PATH=${1:-'/opt/apps/jitsi-meet'}
 
 # ORDERED list of template names
 # NOTE: let var empty to use the folder names as given in your directory  
-TEMPLATE_NAMES="${FQDN_TEMPLATES:-'subdomain1.domain.tld subdomain2.domain.tld'}"
+TEMPLATE_NAMES="${FQDN_TEMPLATES}"
 
-cd ${APP_PATH}/custom-frontends
-FOLDER_NAME_LIST=$(echo *)
-cd - > /dev/null
+
+fn_getTemplateFolderList() {
+    cd ${APP_PATH}/custom-frontends
+    FOLDER_NAME_LIST=$(echo *)
+    cd - > /dev/null
+
+    echo ${FOLDER_NAME_LIST}
+}
 
 fn_AddToList() {
     # expects $1 as the list
@@ -60,21 +65,98 @@ fn_AddToList() {
 
 if [ -n "${TEMPLATE_NAMES}" ]
 then
-    for FOLDER_NAME in ${FOLDER_NAME_LIST}
+    FOLDER_NAME_LIST=$(fn_getTemplateFolderList ${APP_PATH})
+    for TEMPLATE_NAME in ${TEMPLATE_NAMES}
     do
-        TEMPLATE_NAME=$(echo ${TEMPLATE_NAMES} | awk -v count=${count} '{print $count}')
-        if [ -n "${TEMPLATE_NAME}" ]
+        FOLDER_NAME=$(echo ${FOLDER_NAME_LIST} | awk -v count=${count} '{print $count}')
+        if [ -n "${FOLDER_NAME}" ]
         then
-            mv ${APP_PATH}/custom-frontends/${FOLDER_NAME} ${APP_PATH}/custom-frontends/${TEMPLATE_NAME}
+            if [ "${TEMPLATE_NAME}" != "${FOLDER_NAME}" ]
+            then
+                # rename folder
+                mv ${APP_PATH}/custom-frontends/${FOLDER_NAME} ${APP_PATH}/custom-frontends/${TEMPLATE_NAME}
+            else
+                # skip renaming, folders have identical names  
+                :
+            fi
             FQDN_LIST=$(fn_AddToList ${FQDN_LIST} ${TEMPLATE_NAME})
         else
-            :          
+            # no more entries in your FOLDER_NAME_LIST
+            # this template (and following) will not on the list for setting up sites
+            # TODO: add folder from copy of base folder (/usr/share/jitsi-meet) 
+            # TODO: cp with new name ${TEMPLATE_NAME} at destination  
+            echo "no folder for template ${TEMPLATE_NAME} .. skipping .."
+            break
         fi
         count=$( expr ${count} + 1 )
     done
 else
-    :
+    # no template names given, so use name of template folders as domains.. 
+    FQDN_LIST=$(fn_getTemplateFolderList ${APP_PATH})
 fi
+
+echo "DEBUG: ${FQDN_LIST}"
+
+#################
+# 
+# modifying and organizing config files
+#
+#################
+
+fn_MofifyCfgLua() {
+    # expects #1 parameter ${APP_PATH}
+    # expects #2 parameter ${FQDN}
+
+    # modifying cfg.lua
+    # extract the password 
+    # pattern:
+    # - zero or more blanks at beginning of line
+    # - followed by 'external_service_secret :"' (note the double quote)
+    # - followed by undefined number of any char, ends with '";' (double quote and semicolon)  
+    # - the pattern between the double quotes is catched as group and substituted to stdout 
+    # - stdout = passwordstring is stored into $EXTERNAL_SERVICE_SECRET  
+    # expected pattern in <domain>.cfg.lua (NOTE the blanks!): external_service_secret = "<chars>"; 
+    EXTERNAL_SERVICE_SECRET=$(sed -n 's/ \{0,\}external_service_secret = \"\(.*\)\"\;$/\1/p' /etc/prosody/conf.avail/${FQDN}.cfg.lua)
+
+    # parse config files to destination  
+    sed -e "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN}~g" \
+    -e "s~{{EXTERNAL_SERVICE_SECRET}}~${EXTERNAL_SERVICE_SECRET}~g" ${APP_PATH}/configs/templates/domain.cfg.lua > /etc/prosody/conf.avail/${FQDN}.cfg.lua
+
+}
+
+fn_MofifyCfgLua ${APP_PATH} ${FQDN_AUTH}
+
+
+fn_ModifyJicofoConf() {
+    # expects #1 ${APP_PATH}
+    # expects #2 ${FQDN}
+
+    # modifying jicofo.conf
+    # extract the password
+    # pattern:
+    # - zero or more blanks at beginning of line
+    # - followed by 'password :"' (note the double quote)
+    # - followed by undefined number of any char, ends with '"' (double quote)  
+    # - the pattern between the double quotes is catched as group and substituted to stdout 
+    # - stdout = passwordstring is stored into $JICOFO_PASSWORD  
+    # expected pattern in jicofo.conf: password: "<chars>" 
+    JICOFO_PASSWORD=$(sed -n 's/ \{0,\}password: \"\(.*\)\"$/\1/p' /etc/jitsi/jicofo/jicofo.conf)
+
+    sed -e "s~{{JICOFO_PASSWORD}}~${JICOFO_PASSWORD}~g" \
+    -e "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN}~g" ${APP_PATH}/configs/templates/jicofo-template.conf > /etc/jitsi/jicofo/jicofo.conf
+}
+
+fn_ModifyJicofoConf ${APP_PATH} ${FQDN_AUTH}
+
+
+#################
+# 
+# running configuration for your domains (with certificates)  
+#
+#################
+
+# stop nginx before running installations
+systemctl stop nginx
 
 for FQDN in ${FQDN_LIST}
 do
@@ -200,60 +282,33 @@ do
     # \(.*$\) - stores everyting after 'root' until end of line, into a group
     # \1 first group (blanks..) are added before the replacement string 'root /var/..'  
     # the result is written to new file in sites-available
-    awk '/server {/ {flag=1} flag; /^}/ {flag=0}' /etc/nginx/sites-available/${FQDN_AUTH}.conf | sed -e "s~^\([ ]*\)root\(.*$\)~\1root \/var\/www/${FQDN};~g" -e "s~${FQDN_AUTH}~${FQDN}~g" > /etc/nginx/sites-available/${FQDN}.conf
+    awk '/server {/ {flag=1} flag; /^}/ {flag=0}' /etc/nginx/sites-available/${FQDN_AUTH}.conf | sed -e "s~^\([ ]*\)root\(.*$\)~\1root \/var\/www/${FQDN};~g" \
+    -e "s~${FQDN_AUTH}~${FQDN}~g" > /etc/nginx/sites-available/${FQDN}.conf
 
-    ln -sf /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf  
+    # enable sites 
+    ln -sf /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf
 
     # prepare domain list for certbot..
-    CERTBOT_DOMAINS="${CERTBOT_DOMAINS} ${FQDN}"
+    CERTBOT_DOMAINS="${CERTBOT_DOMAINS}${FQDN},"
+
+    fn_MofifyCfgLua ${APP_PATH} ${FQDN}
+    fn_ModifyJicofoConf ${APP_PATH} ${FQDN}
 
 done
 
-# get missing certs..
-for DOMAIN in ${CERTBOT_DOMAINS}
-do
-    CERTBOT_DOMAIN_STRING="${CERTBOT_DOMAIN_STRING} -d ${DOMAIN}"
-done
-certbot certonly --nginx ${CERTBOT_DOMAIN_STRING}
+# from the docs  
+# certonly    Obtain or renew a certificate, but do not install it
+# -d DOMAINS  Comma-separated list of domains to obtain a certificate for
+# certbot certonly --nginx -d <comma separated domains>
+# remove trailing comma
+# certonly --standalone copies certs to /etc/letsencrypt/live/<FQDN>
+# NOTE: to remove 'old' certificates you have to run: 
+# certbot delete -n --cert-name <your-cert-name>
+CERTBOT_DOMAINS=$(echo ${CERTBOT_DOMAINS} | sed 's/,*$//g')
+certbot certonly --standalone -d ${CERTBOT_DOMAINS}
 
-systemclt reload nginx
-
-#################
-# 
-# modifying and organizing config files
-#
-#################
-
-# modifying cfg.lua
-# extract the password 
-# pattern:
-# - zero or more blanks at beginning of line
-# - followed by 'external_service_secret :"' (note the double quote)
-# - followed by undefined number of any char, ends with '";' (double quote and semicolon)  
-# - the pattern between the double quotes is catched as group and substituted to stdout 
-# - stdout = passwordstring is stored into $EXTERNAL_SERVICE_SECRET  
-# expected pattern in <domain>.cfg.lua (NOTE the blanks!): external_service_secret = "<chars>"; 
-EXTERNAL_SERVICE_SECRET=$(sed -n 's/ \{0,\}external_service_secret = \"\(.*\)\"\;$/\1/p' /etc/prosody/conf.avail/${FQDN_AUTH}.cfg.lua)
-
-# parse config files to destination  
-sed -e "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN_AUTH}~g" \
--e "s~{{EXTERNAL_SERVICE_SECRET}}~${EXTERNAL_SERVICE_SECRET}~g" ${APP_PATH}/configs/templates/domain.cfg.lua > /etc/prosody/conf.avail/${FQDN_AUTH}.cfg.lua
-
-
-# modifying jicofo.conf
-# extract the password
-# pattern:
-# - zero or more blanks at beginning of line
-# - followed by 'password :"' (note the double quote)
-# - followed by undefined number of any char, ends with '"' (double quote)  
-# - the pattern between the double quotes is catched as group and substituted to stdout 
-# - stdout = passwordstring is stored into $JICOFO_PASSWORD  
-# expected pattern in jicofo.conf: password: "<chars>" 
-JICOFO_PASSWORD=$(sed -n 's/ \{0,\}password: \"\(.*\)\"$/\1/p' /etc/jitsi/jicofo/jicofo.conf)
-
-sed -e "s~{{JICOFO_PASSWORD}}~${JICOFO_PASSWORD}~g" \
--e "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN_AUTH}~g" ${APP_PATH}/configs/templates/jicofo-template.conf > /etc/jitsi/jicofo/jicofo.conf
-
+# restart nginx after all operations above  
+systemctl start nginx
 
 
 # adds new user (XMPP)
