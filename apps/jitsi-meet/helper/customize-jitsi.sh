@@ -40,7 +40,7 @@ APP_PATH=${1:-'/opt/apps/jitsi-meet'}
 
 # ORDERED list of template names
 # NOTE: let var empty to use the folder names as given in your directory  
-TEMPLATE_NAMES="${FQDN_TEMPLATES}:-'subdomain1.domain.tld subdomain2.domain.tld'"
+TEMPLATE_NAMES="${FQDN_TEMPLATES:-'subdomain1.domain.tld subdomain2.domain.tld'}"
 
 cd ${APP_PATH}/custom-frontends
 FOLDER_NAME_LIST=$(echo *)
@@ -204,8 +204,6 @@ do
 
     ln -sf /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf  
 
-    systemctl nginx reload
-
     # prepare domain list for certbot..
     CERTBOT_DOMAINS="${CERTBOT_DOMAINS} ${FQDN}"
 
@@ -217,6 +215,8 @@ do
     CERTBOT_DOMAIN_STRING="${CERTBOT_DOMAIN_STRING} -d ${DOMAIN}"
 done
 certbot certonly --nginx ${CERTBOT_DOMAIN_STRING}
+
+systemclt reload nginx
 
 #################
 # 
