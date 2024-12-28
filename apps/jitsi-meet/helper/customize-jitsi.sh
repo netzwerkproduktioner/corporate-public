@@ -107,6 +107,8 @@ fn_MofifyCfgLua() {
     # expects #2 parameter ${FQDN}
     FQDN=${2}
 
+    FQDN_AUTH=${3}
+
     # modifying cfg.lua
     # extract the password 
     # pattern:
@@ -116,7 +118,9 @@ fn_MofifyCfgLua() {
     # - the pattern between the double quotes is catched as group and substituted to stdout 
     # - stdout = passwordstring is stored into $EXTERNAL_SERVICE_SECRET  
     # expected pattern in <domain>.cfg.lua (NOTE the blanks!): external_service_secret = "<chars>"; 
-    EXTERNAL_SERVICE_SECRET=$(sed -n 's/ \{0,\}external_service_secret = \"\(.*\)\"\;$/\1/p' /etc/prosody/conf.avail/${FQDN}.cfg.lua)
+    EXTERNAL_SERVICE_SECRET=$(sed -n 's/ \{0,\}external_service_secret = \"\(.*\)\"\;$/\1/p' /etc/prosody/conf.avail/${FQDN_AUTH}.cfg.lua)
+
+    echo ${EXTERNAL_SERVICE_SECRET} > /opt/apps/jitsi-meet/debug.file
 
     # parse config files to destination  
     sed -e "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN}~g" \
@@ -124,7 +128,7 @@ fn_MofifyCfgLua() {
 
 }
 
-fn_MofifyCfgLua ${APP_PATH} ${FQDN_AUTH}
+fn_MofifyCfgLua ${APP_PATH} ${FQDN_AUTH} ${FQDN_AUTH}
 
 
 fn_ModifyJicofoConf() {
@@ -290,7 +294,7 @@ do
     # enable sites 
     ln -sf /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf
 
-    fn_MofifyCfgLua ${APP_PATH} ${FQDN}
+    fn_MofifyCfgLua ${APP_PATH} ${FQDN} ${FQDN_AUTH}
     #fn_ModifyJicofoConf ${APP_PATH} ${FQDN}
 
     # from the docs  
