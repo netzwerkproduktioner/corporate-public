@@ -301,9 +301,11 @@ do
     # the result is written to new file in sites-available
     # NOTE: you have to replace FQDN_AUTH before adding/modifing the path to the main (FQDN_AUTH) config
     awk '/server {/ {flag=1} flag; /^}/ {flag=0}' /etc/nginx/sites-available/${FQDN_AUTH}.conf | \
+    awk -v REPLACEMENT="alias /var/www/${FQDN}/" '/libs\|css\|static\|images\|fonts\|lang\|sounds\|\.well-known/, /alias \/usr\/share\/jitsi-meet/ \
+    { REPLACEMENT; sub(/alias .[^\$]+/, REPLACEMENT)};{ print $0}' | \
     sed -e "s~^\([ ]*\)root\(.*$\)~\1root \/var\/www/${FQDN};~g" \
     -e "s~${FQDN_AUTH}~${FQDN}~g" \
-    -e "s~set\ \$config_js_location.*$~set \$config_js_location \/etc\/jitsi\/meet\/${FQDN_AUTH}-config.js;~g" > /etc/nginx/sites-available/${FQDN}.conf
+    -e "s~set\ \$config_js_location.*$~set \$config_js_location \/etc\/jitsi\/meet\/${FQDN_AUTH}-config.js;~g" /etc/nginx/sites-available/${FQDN}.conf
 
     # enable sites 
     ln -sf /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf
