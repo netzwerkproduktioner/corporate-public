@@ -3,7 +3,7 @@ plugin_paths = { "/usr/share/jitsi-meet/prosody-plugins/" }
 -- domain mapper options, must at least have domain base set to use the mapper
 muc_mapper_domain_base = "{{SUBDOMAIN.DOMAIN.TLD}}";
 
-external_service_secret = "6BrTeWaEXx1MZJqQ";
+external_service_secret = "{{EXTERNAL_SERVICE_SECRET}}";
 external_services = {
      { type = "stun", host = "{{SUBDOMAIN.DOMAIN.TLD}}", port = 3478 },
      { type = "turn", host = "{{SUBDOMAIN.DOMAIN.TLD}}", port = 3478, transport = "udp", secret = true, ttl = 86400, algorithm = "turn" },
