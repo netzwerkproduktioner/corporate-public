@@ -120,7 +120,8 @@ fn_MofifyCfgLua() {
     # expected pattern in <domain>.cfg.lua (NOTE the blanks!): external_service_secret = "<chars>"; 
     EXTERNAL_SERVICE_SECRET=$(sed -n 's/ \{0,\}external_service_secret = \"\(.*\)\"\;$/\1/p' /etc/prosody/conf.avail/${FQDN_AUTH}.cfg.lua)
 
-    echo ${EXTERNAL_SERVICE_SECRET} > /opt/apps/jitsi-meet/debug.file
+    # backup the initial file  
+    cp /etc/prosody/conf.avail/${FQDN_AUTH}.cfg.lua /opt/apps/jitsi-meet/${FQDN_AUTH}.cfg.lua.backup
 
     # parse config files to destination  
     sed -e "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN}~g" \
@@ -147,6 +148,9 @@ fn_ModifyJicofoConf() {
     # - stdout = passwordstring is stored into $JICOFO_PASSWORD  
     # expected pattern in jicofo.conf: password: "<chars>" 
     JICOFO_PASSWORD=$(sed -n 's/ \{0,\}password: \"\(.*\)\"$/\1/p' /etc/jitsi/jicofo/jicofo.conf)
+
+    # backup the initial file  
+    cp /etc/jitsi/jicofo/jicofo.conf /opt/apps/jitsi-meet/jicofo.conf.backup
 
     sed -e "s~{{JICOFO_PASSWORD}}~${JICOFO_PASSWORD}~g" \
     -e "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN}~g" ${APP_PATH}/configs/templates/jicofo-template.conf > /etc/jitsi/jicofo/jicofo.conf
