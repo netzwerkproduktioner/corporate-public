@@ -82,7 +82,7 @@ var interfaceConfig = {
      */
     HIDE_INVITE_MORE_HEADER: false,
 
-    JITSI_WATERMARK_LINK: 'https://jitsi.bjoern-englert.net',
+    JITSI_WATERMARK_LINK: '{{JITSI_WATERMARK_LINK}}',
 
     LANG_DETECTION: true, // Allow i18n to detect the system language
     LOCAL_THUMBNAIL_RATIO: 16 / 9, // 16:9
