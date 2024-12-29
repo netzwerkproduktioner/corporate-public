@@ -128,8 +128,8 @@ fn_MofifyCfgLua() {
 
 }
 
+# modify prosody cfg.lua for the main user (FQDN_AUTH)  
 fn_MofifyCfgLua ${APP_PATH} ${FQDN_AUTH} ${FQDN_AUTH}
-
 
 fn_ModifyJicofoConf() {
     # expects #1 ${APP_PATH}
@@ -152,6 +152,7 @@ fn_ModifyJicofoConf() {
     -e "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN}~g" ${APP_PATH}/configs/templates/jicofo-template.conf > /etc/jitsi/jicofo/jicofo.conf
 }
 
+# modify jicofo.conf for the main user (FQDN_AUTH)  
 fn_ModifyJicofoConf ${APP_PATH} ${FQDN_AUTH}
 
 
@@ -293,9 +294,6 @@ do
 
     # enable sites 
     ln -sf /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf
-
-    fn_MofifyCfgLua ${APP_PATH} ${FQDN} ${FQDN_AUTH}
-    #fn_ModifyJicofoConf ${APP_PATH} ${FQDN}
 
     # from the docs  
     # certonly    Obtain or renew a certificate, but do not install it
