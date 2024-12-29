@@ -30,6 +30,8 @@ CERTBOT_DOMAINS=
 #################
 APP_PATH=${1:-'/opt/apps/jitsi-meet'}
 
+mkdir ${APP_PATH}/backup
+
 # be aware that your vars are set and your .env is loaded ..
 # remember: the env file is build from your cloud-config.yml  
 # remember: set values for vars (for this script) in your env file  
@@ -121,7 +123,7 @@ fn_MofifyCfgLua() {
     EXTERNAL_SERVICE_SECRET=$(sed -n 's/ \{0,\}external_service_secret = \"\(.*\)\"\;$/\1/p' /etc/prosody/conf.avail/${FQDN_AUTH}.cfg.lua)
 
     # backup the initial file  
-    cp /etc/prosody/conf.avail/${FQDN_AUTH}.cfg.lua /opt/apps/jitsi-meet/${FQDN_AUTH}.cfg.lua.backup
+    cp /etc/prosody/conf.avail/${FQDN_AUTH}.cfg.lua ${APP_PATH}/backup/${FQDN_AUTH}.cfg.lua.backup
 
     # parse config files to destination  
     sed -e "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN}~g" \
@@ -150,7 +152,7 @@ fn_ModifyJicofoConf() {
     JICOFO_PASSWORD=$(sed -n 's/ \{0,\}password: \"\(.*\)\"$/\1/p' /etc/jitsi/jicofo/jicofo.conf)
 
     # backup the initial file  
-    cp /etc/jitsi/jicofo/jicofo.conf /opt/apps/jitsi-meet/jicofo.conf.backup
+    cp /etc/jitsi/jicofo/jicofo.conf ${APP_PATH}/backup/jicofo.conf.backup
 
     sed -e "s~{{JICOFO_PASSWORD}}~${JICOFO_PASSWORD}~g" \
     -e "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN}~g" ${APP_PATH}/configs/templates/jicofo-template.conf > /etc/jitsi/jicofo/jicofo.conf
@@ -159,6 +161,9 @@ fn_ModifyJicofoConf() {
 # modify jicofo.conf for the main user (FQDN_AUTH)  
 fn_ModifyJicofoConf ${APP_PATH} ${FQDN_AUTH}
 
+# replace -config.js for FQDN_AUTH from template  
+# TODO: refactor with substition on the original file (update resistent)  
+sed "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN_AUTH}~g" ${APP_PATH}/configs/templates/domain-config.js > /etc/jitsi/meet/${FQDN_AUTH}-config.js
 
 #################
 # 
@@ -210,8 +215,9 @@ do
     # TODO: Create update routine which preserves your custom files..
     cp -R /usr/share/jitsi-meet/* /var/www/${FQDN}
 
+    # TODO: remove after debugging  
     # create config for subdomain  
-    sed "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN}~g" ${APP_PATH}/configs/templates/domain-config.js > /etc/jitsi/meet/${FQDN}-config.js
+    # sed "s~{{SUBDOMAIN.DOMAIN.TLD}}~${FQDN}~g" ${APP_PATH}/configs/templates/domain-config.js > /etc/jitsi/meet/${FQDN}-config.js
 
     # create interface for subdomain  
     sed -e "s~{{APP_NAME}}~${APP_NAME}~g" \
@@ -293,8 +299,11 @@ do
     # \(.*$\) - stores everyting after 'root' until end of line, into a group
     # \1 first group (blanks..) are added before the replacement string 'root /var/..'  
     # the result is written to new file in sites-available
-    awk '/server {/ {flag=1} flag; /^}/ {flag=0}' /etc/nginx/sites-available/${FQDN_AUTH}.conf | sed -e "s~^\([ ]*\)root\(.*$\)~\1root \/var\/www/${FQDN};~g" \
-    -e "s~${FQDN_AUTH}~${FQDN}~g" > /etc/nginx/sites-available/${FQDN}.conf
+    # NOTE: you have to replace FQDN_AUTH before adding/modifing the path to the main (FQDN_AUTH) config
+    awk '/server {/ {flag=1} flag; /^}/ {flag=0}' /etc/nginx/sites-available/${FQDN_AUTH}.conf | \
+    sed -e "s~^\([ ]*\)root\(.*$\)~\1root \/var\/www/${FQDN};~g" \
+    -e "s~${FQDN_AUTH}~${FQDN}~g" \
+    -e "s~set\ \$config_js_location.*$~set \$config_js_location \/etc\/jitsi\/meet\/${FQDN_AUTH}-config.js;~g" > /etc/nginx/sites-available/${FQDN}.conf
 
     # enable sites 
     ln -sf /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf
@@ -354,6 +363,9 @@ then
 else 
     :
 fi
+
+# TODO: why is ssh.service disabled after running the initialization?
+systemctl enable ssh.service
 
 systemctl restart ufw
 systemctl restart ssh
