@@ -335,39 +335,15 @@ systemctl restart jicofo
 systemctl restart jitsi-videobridge2
 
 
-#################
-# 
-# ssh hardening
-#################
-
-# change settings in /etc/ssh/sshd_config  
-# @see: https://community.hetzner.com/tutorials/basic-cloud-config/de  
-sed -i -e "/^\(#\|\)PermitRootLogin/s/^.*$/PermitRootLogin no/" /etc/ssh/sshd_config
-sed -i -e "/^\(#\|\)PasswordAuthentication/s/^.*$/PasswordAuthentication no/" /etc/ssh/sshd_config
-sed -i -e "/^\(#\|\)X11Forwarding/s/^.*$/X11Forwarding no/" /etc/ssh/sshd_config
-sed -i -e '/^\(#\|\)KbdInteractiveAuthentication/s/^.*$/KbdInteractiveAuthentication no/' /etc/ssh/sshd_config
-sed -i -e '/^\(#\|\)ChallengeResponseAuthentication/s/^.*$/ChallengeResponseAuthentication no/' /etc/ssh/sshd_config
-sed -i -e "/^\(#\|\)MaxAuthTries/s/^.*$/MaxAuthTries ${SSH_MAX_AUTHTRIES}/" /etc/ssh/sshd_config
-sed -i -e "/^\(#\|\)AllowTcpForwarding/s/^.*$/AllowTcpForwarding no/" /etc/ssh/sshd_config
-sed -i -e "/^\(#\|\)AllowAgentForwarding/s/^.*$/AllowAgentForwarding no/" /etc/ssh/sshd_config
-sed -i -e "/^\(#\|\)Port/s/^.*$/Port ${SSH_PORT}/" /etc/ssh/sshd_config
-sed -i -e "/^\(#\|\)AuthorizedKeysFile/s/^.*$/AuthorizedKeysFile .ssh\/authorized_keys/" /etc/ssh/sshd_config
-
-# set allowed users  
-# more than one user: user name separated by blanks  
-sed -i "\$a AllowUsers ${SSH_USERS}" /etc/ssh/sshd_config
-
 # override firewall settings from cloud-init.yaml  
 # close the default ssh port
 if [ ${SSH_PORT} -ne 22 ]
 then 
+    echo "close ssh port.."
     ufw deny 22/tcp 
 else 
     :
 fi
-
-# TODO: why is ssh.service disabled after running the initialization?
-systemctl enable ssh.service
 
 systemctl restart ufw
 systemctl restart ssh
