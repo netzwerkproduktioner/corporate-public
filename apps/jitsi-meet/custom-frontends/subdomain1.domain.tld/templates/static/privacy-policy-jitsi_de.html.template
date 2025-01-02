@@ -1,38 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html class="html">
 <head>
     <meta charset="utf-8">
-    <link rel='stylesheet' href='css/styles.css' type='text/css' media='all' />
+    <link rel='stylesheet' href='css/meet.css' type='text/css' media='all' />
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
     <title>{{NAME_PRIVACY_POLICY}}</title>
 </head>
-<body>
-    <main>
-        <section class="business-main">
-            <article>
+<body class="body">
+    <main class="meet-main">
+        <a name="top"></a>
+        <section class="meet-section">
+            <article class="meet-article">
                 <h1>{{NAME_PRIVACY_POLICY}}</h1>
                 <h2>Informationen zum Daten­schutz</h2>
-                <p>
-                Mit dieser Datenschutzerklärung möchten wir (im folgenden „Anbieter“) Sie als NutzerIn über den Umfang der Erhebung personenbezogener Daten bei Aufruf und Nutzung unserer  Internetseiten informieren. Ferner werden der Zweck der Datenerhebung und deren Verwendung bzw. Verarbeitung (Artikel 4, DSGVO) dargestellt.</p>
+                <p>Mit dieser Datenschutzerklärung möchten wir (im folgenden „Anbieter“) Sie als NutzerIn über den Umfang der Erhebung personenbezogener Daten bei Aufruf und Nutzung unserer  Internetseiten informieren. Ferner werden der Zweck der Datenerhebung und deren Verwendung bzw. Verarbeitung (Artikel 4, DSGVO) dargestellt.</p>
                 <h3>Verantwortlicher im Sinne des Art. 4 (DSGVO)</h3>
-                Björn Englert GmbH<br />
-                vertreten durch: Björn Englert<br />
-                Singerstraße 33<br />
-                10243 Berlin<br />
-                <a href="mailto:webmaster@bjoern-englert.com">webmaster@bjoern-englert.com</a><br />
-                Telefon: +49 30 28 09 33 60<br />
-                <p>
-                Die Regelungen zum Datenschutz finden sich insbesondere in der Datenschutzgrundverordnung (DSGVO).</p>
+                <address class="meet-address">
+                    <strong>Björn Englert GmbH</strong><br />
+                    vertreten durch: Björn Englert<br />
+                    Singerstraße 33<br />
+                    10243 Berlin<br />
+                    <a href="mailto:webmaster@bjoern-englert.com">webmaster@bjoern-englert.com</a><br />
+                    Telefon: +49 30 28 09 33 60<br />
+                </address>
+                <p>Die Regelungen zum Datenschutz finden sich insbesondere in der Datenschutzgrundverordnung (DSGVO).</p>
                 <h3>Rechtsgrundlagen</h3>
                 <p>Unsere Datenschutzerklärung erfolgt nach Vorgabe des Art. 13 DSGVO nachdem wir verpflichtet sind, Sie als NutzerIn über den Umfang und die Verwendung der von uns erhobenen und verarbeiteten personenbezogenen Daten zu informieren.</p>
                 <p>Die Rechtmäßigkeit der Verarbeitung personenbezogener Daten regelt Artikel 6 der DSGVO, wobei bei Nutzung dieses Internetangebotes und bei Kontaktaufnahme mit uns, vor allem Art. 6a und 6b für die Verarbeitung ihrer personenbezogenen Daten von großer Bedeutung sind. Darüber hinaus kann es erforderlich sein, dass wir Ihre Daten verarbeiten, um eine rechtliche Verpflichtung zu erfüllen (Art. 6c). Weitere Punkte sind in Artikel 6 der DSGVO geregelt.</p>
                 <h3>Begrifflichkeiten</h3>
                 <p>Zu den in unserer Datenschutzerklärung verwendeten Begriffen verweisen wir auf die Begriffsdefinitionen in Artikel 4 der DSGVO, von denen wir hier die für unsere Datenschutzerklärung wichtigsten auszugsweise wiedergeben:</p>
                 <ul>
-                <li>„Personenbezogene Daten“ sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person (im Folgenden „betroffene Person“) beziehen; als identifizierbar wird eine natürliche Person angesehen, die direkt oder indirekt, insbesondere mittels Zuordnung zu einer Kennung wie einem Namen, zu einer Kennnummer, zu Standortdaten, zu einer Online-Kennung oder zu einem oder mehreren besonderen Merkmalen, die Ausdruck der physischen, physiologischen, genetischen, psychischen, wirtschaftlichen, kulturellen oder sozialen Identität dieser natürlichen Person sind, identifiziert werden kann (Art. 4, Punkt 1, DSGVO).</li>
-                <li>„Verarbeitung“ bezeichnet jeden mit oder ohne Hilfe automatisierter Verfahren ausgeführten Vorgang oder jede solche Vorgangsreihe im Zusammenhang mit personenbezogenen Daten wie das Erheben, das Erfassen, die Organisation, das Ordnen, die Speicherung, die Anpassung oder Veränderung, das Auslesen, das Abfragen, die Verwendung, die Offenlegung durch Übermittlung, Verbreitung oder eine andere Form der Bereitstellung, den Abgleich oder die Verknüpfung, die Einschränkung, das Löschen oder die Vernichtung (Art. 4, Punkt 2, DSGVO).</li>
-                <li>„Auftragsverarbeiter“ ist eine natürliche oder juristische Person, Behörde, Einrichtung oder andere Stelle, die personenbezogene Daten im Auftrag des Verantwortlichen verarbeitet (Art. 4, Punkt 8, DSGVO).</li>
-                <li>„Einwilligung“ der betroffenen Person ist jede freiwillig für den bestimmten Fall, in informierter Weise und unmissverständlich abgegebene Willensbekundung in Form einer Erklärung oder einer sonstigen eindeutigen bestätigenden Handlung, mit der die betroffene Person zu verstehen gibt, dass sie mit der Verarbeitung der sie betreffenden personenbezogenen Daten einverstanden ist. (Art. 4, Punkt 11, DSGVO).</li>
+                    <li>„Personenbezogene Daten“ sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person (im Folgenden „betroffene Person“) beziehen; als identifizierbar wird eine natürliche Person angesehen, die direkt oder indirekt, insbesondere mittels Zuordnung zu einer Kennung wie einem Namen, zu einer Kennnummer, zu Standortdaten, zu einer Online-Kennung oder zu einem oder mehreren besonderen Merkmalen, die Ausdruck der physischen, physiologischen, genetischen, psychischen, wirtschaftlichen, kulturellen oder sozialen Identität dieser natürlichen Person sind, identifiziert werden kann (Art. 4, Punkt 1, DSGVO).</li>
+                    <li>„Verarbeitung“ bezeichnet jeden mit oder ohne Hilfe automatisierter Verfahren ausgeführten Vorgang oder jede solche Vorgangsreihe im Zusammenhang mit personenbezogenen Daten wie das Erheben, das Erfassen, die Organisation, das Ordnen, die Speicherung, die Anpassung oder Veränderung, das Auslesen, das Abfragen, die Verwendung, die Offenlegung durch Übermittlung, Verbreitung oder eine andere Form der Bereitstellung, den Abgleich oder die Verknüpfung, die Einschränkung, das Löschen oder die Vernichtung (Art. 4, Punkt 2, DSGVO).</li>
+                    <li>„Auftragsverarbeiter“ ist eine natürliche oder juristische Person, Behörde, Einrichtung oder andere Stelle, die personenbezogene Daten im Auftrag des Verantwortlichen verarbeitet (Art. 4, Punkt 8, DSGVO).</li>
+                    <li>„Einwilligung“ der betroffenen Person ist jede freiwillig für den bestimmten Fall, in informierter Weise und unmissverständlich abgegebene Willensbekundung in Form einer Erklärung oder einer sonstigen eindeutigen bestätigenden Handlung, mit der die betroffene Person zu verstehen gibt, dass sie mit der Verarbeitung der sie betreffenden personenbezogenen Daten einverstanden ist. (Art. 4, Punkt 11, DSGVO).</li>
                 </ul>
                 <h3>Zweck der Verarbeitung</h3>
                 <p>Wir verarbeiten Ihre personenbezogenen Daten, um Ihnen unser Onlineangebot zur Verfügung stellen zu können sowie zur Bearbeitung von Kontaktanfragen und der Kommunikation mit Ihnen. Ferner erfolgt die Verarbeitung von Zugriffsdaten (siehe unten) auch zur Erhaltung der Sicherheit und Optimierung der Webseiten (z.B. für Fehlerbehebungen und Abwehr von mißbräuchlicher Nutzung).</p>
@@ -41,11 +42,11 @@
                 <p>Wenn Sie mit dem Anbieter in Kontakt treten (z.B. per Email) werden Ihre Daten nur zum Zwecke der Durchführung dieser Kommunikation gespeichert und verarbeitet. Mit Übermittlung Ihrer Daten erteilen Sie dem Anbieter hierfür Ihre Einwilligung. Art und Umfang dieser Verarbeitung bestimmt sich durch die Art Ihrer Kontaktaufnahme. Wenn Sie eine einfache Kontaktanfrage per Email stellen, wird diese und der sich aus der Kommunikation ergebene Verlauf auf dem Emailserver unseres Hostingprovider gespeichert. Fordern Sie ein Angebot an und übermitteln Sie ferner Daten für die Angebotserstellung, werden Ihre übermittelten Daten in unserem Kalkulationssystem auf einem firmeninternen Rechner erfasst, um dort das Angebot zu erstellen und Ihnen zukommen zu lassen. Die jeweils verarbeiteten Daten werden Ablauf der jeweiligen gesetzlichen Aufbewahrungspflicht gelöscht, bzw. mit einem Sperrvermerk versehen.</p>
                 <p>Zu den dabei erfassten personenbezogenen Daten zählen:</p>
                 <ul>
-                <li>Kontaktdaten (z.B. Emailadressen, Telefonnummern, Postanschriften, AnsprechpartnerInnen)</li>
-                <li>Daten zur Firmierung (z.B. Handelsregisternummer, Steuernummern)</li>
-                <li>Stammdaten (z.B. Rechnungsanschrift, Vertragsanschrift, Lieferanschriften, Bankverbindungen)</li>
-                <li>Inhalte (z.B. von Ihnen übermittelte Dateien, Texte)</li>
-            </ul>
+                    <li>Kontaktdaten (z.B. Emailadressen, Telefonnummern, Postanschriften, AnsprechpartnerInnen)</li>
+                    <li>Daten zur Firmierung (z.B. Handelsregisternummer, Steuernummern)</li>
+                    <li>Stammdaten (z.B. Rechnungsanschrift, Vertragsanschrift, Lieferanschriften, Bankverbindungen)</li>
+                    <li>Inhalte (z.B. von Ihnen übermittelte Dateien, Texte)</li>
+                </ul>
                 <h3>Zugriffsdaten und Cookies</h3>
                 <p>Wir setzen auf unseren Webseiten keine Cookies ein. Ausnahmen bei bestimmten Diensten (z.B. <a href="#videokonferenzen">Videokonferenzen</a>) sind weiter unten beschrieben.</p>
                 <p>Der Internetanbieter (Hostingprovider) des Anbieters erhebt Daten über jeden Zugriff auf die Webseiten (so genannte Serverlogfiles). Inhalt dieser Zugriffsdaten sind ihre IP-Adresse sowie die Adresse der zuvor besuchten Internetseite (sogenannter Referrer) und der Name Ihres Providers (Internetanbieter), das Datum und Uhrzeit des Abrufs, der Name der abgerufenen Webseite, die abgerufene(n) Datei(en) und die übertragene Datenmenge. Darüber hinaus werden in den Logfiles noch Name und Version ihres Webbrowsers sowie Name und Version des Betriebssystems gespeichert.</p>
@@ -65,9 +66,9 @@
                 <h3>Löschung von Daten</h3>
                 <p>Wir löschen die von uns verarbeiteten Daten nach den Artikeln 17 und 18 der DSGVO, sofern keine gesetzlichen Aufbewahrungspflichten gelten bzw. diese abgelaufen sind., bzw. schränken die Verarbeitung der Daten nach Erfüllung ihres Zwecks während der Aufbewahrungsfristen ein.
                 Die Logfiles die Seitens des Hostingproviders verarbeitet werden, sind dort für uns für einen Zeitraum von 2 Monaten abrufbar und werden danach vom Provider automatisch gelöscht.</p>
-                <hr />
             </article>
-            <article>
+            <hr class="meet-hr" />
+            <article class="meet-article">
             <h2>Ihre Daten bei Teilnahme an <a name="videokonferenzen">Videokonferenzen</a></h2>
                 <p>Wir betreiben auf einem Server mit Standort in Deutschland eine Instanz der OpenSource-Software JITSI (https://www.jitsi.org). Diesen Dienst nutzen wir als zusätzliches Angebot in der Kommunikation mit unseren Kunden:innen. Diesen Dienst können Sie daher nur nutzen, wenn Sie zuvor eine Einladung mit den Zugangsdaten von uns erhalten haben.</p>
                 <p>Verbindungen vom Client zum Server, also von Ihrem Rechner zum Server, erfolgen verschlüsselt und sind damit vor dem unbefugten Zugriff Dritter geschützt. Auf dem von uns betriebenen Server werden diese Daten entschlüsselt und für die Teilnehmenden der Konferenz wiederum erneut verschlüsselt übertragen.</p>
@@ -98,6 +99,11 @@
                 <p>Wir verwenden diese Protokolldaten nur für statistische Auswertungen zum Zweck des Betriebs, der Sicherheit und der Optimierung der Internetseiten (z.B. Fehlerbehebungen). Diese Daten werden <strong>nicht</strong> an Dritte (z.B. Werbenetzwerke) weitergegeben.</p>
                 <p>Mit dem Hostingprovider unserer Internetseiten haben ich eine entsprechende Vereinbarung zur Auftragsverarbeitung (nach Art. 28 DSGVO) geschlossen. </p>
             </article>
+            <nav>
+                <form action="#top">
+                    <button class="meet-button">nach oben</button>
+                </form>
+            </nav>
         </section>
     </main>
 </body>

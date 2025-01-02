@@ -7,10 +7,38 @@
   <title>{{NAME_LEGAL_NOTICE}}</title>
 </head>
 <body class="body">
-  <main class="main">
-    <div class="imprint">
-      <h1>{{NAME_LEGAL_NOTICE}}</h1>
-    </div>
+  <main class="meet-main">
+    <section class="meet-section">
+      <article class="meet-article">
+        <h1>{{NAME_LEGAL_NOTICE}}</h1>
+              <address class="meet-address">
+                  <div vocab="http://schema.org/" typeof="Organization">
+                      <h2><span property="name">Bj&ouml;rn Englert GmbH</span></h2>
+                      <div property="address" typeof="PostalAddress" class="postaladdress">
+                          <span property="streetAddress">Singerstra&szlig;e 33</span><br><span property="postalCode" clear="both">10243</span>
+                          <span property="addressLocality">Berlin </br></span>
+                          <span property="addressCountry">Deutschland</span>
+                      </div>
+                      <div class="meet-contact">
+                          <span class="contact-telefon" title="Telefon">Tel:&nbsp;</span><span property="telephone">( +49 30) 28 09 33 60</span><br>
+                          <span class="contact-fax" title="Fax">Fax:&nbsp;</span><span property="faxNumber">( +49 30) 28 09 33 61</span><br>
+                          <span class="contact-email" title="E-mail">E-mail:&nbsp;</span>
+                          <span property="email"><a href="mailto:kontakt@bjoern-englert.com" title="Email an unser B&uuml;ro">kontakt@bjoern-englert.com</a></span>
+                      </div>
+                      <div class="additional-contact">
+                          <span title="Umsatzsteueridentifikationsnummer">USt-Id.: <span property="vatID">DE 293215889</span><br></span>
+                          Sitz: <span property="address" typeof="PostalAddress"><span property="addressLocality">Berlin</span></span>, HRB <span property="number">155656</span><br>
+                          Amtsgericht Berlin-Charlottenburg<br>
+                          Gesch&auml;ftsf&uuml;hrer: <span property="member" typeof="organization">Bj&ouml;rn Englert</span>
+                      </div>
+                  </div>
+              </address>
+          <em>Die Bj&ouml;rn Englert GmbH ist zugleich Anbieterin im Sinne des <abbr title="Telemediengesetz">TMG</abbr></em>
+      </article>
+      <footer class="meet-footer">
+          <div>Unter folgendem Link finden Sie unsere <a href="{{FILENAME_PRIVACY_POLICY}}" href="_self" title="Datenschutzerklärung">Datenschutzerkl&auml;rung</a>.</div>
+      </footer>
+    </section>
   </main>
 </body>
 </html>
