@@ -215,7 +215,7 @@ a[name=top] {
     width: 100%;
     height: 40px;
     bottom: 0;
-    background: var(--darkgrey) !important; 
+    background: var(--white) !important; 
 }
 
 .footer-about {
@@ -227,7 +227,7 @@ a[name=top] {
 }
 
 .footer-link {
-    color: var(--lightgrey) !important;
+    color: var(--black) !important;
 }
 
 .icon {
@@ -267,11 +267,11 @@ a[name=top] {
 
 .header-text-title, 
 .header-text-subtitle {
-    color: var(--lightgrey) !important;
+    display: none;
 }
 
 .welcome {
-    background-color: var(--darkgrey) !important;
+    background-color: var(--white) !important;
 }
 
 .welcome-card--blue {
@@ -279,7 +279,7 @@ a[name=top] {
 }
 
 .header, .welcome .header {
-    background: var(--darkgrey) !important; 
+    background: var(--white) !important; 
 }
 
 .welcome .header .header-container {
@@ -323,8 +323,8 @@ a[name=top] {
 }
 .welcome .welcome-page-settings {
     background: none !important;
-    top: 40px !important;
-    right: 40px !important;
+    top: -24px !important;
+    right: 24px !important;
 }
 
 .welcome .welcome-page-settings:hover, .welcome-page-settings:hover {
@@ -347,22 +347,23 @@ div#videospace div.leftwatermark.watermark {
 }
 
 .welcome .welcome-page-button {
-    background: var(--darkgrey);
+    background: var(--darkgrey) !important;
+    padding: 15px 20px !important;
 }
 
 .welcome .welcome-page-button:hover {
-    background: var(--white);
-    color: var(--darkgrey);
+    background: var(--white) !important;
+    color: var(--darkgrey) !important;
 }
 
 .jitsi-icon-default svg {
-    fill: var(--black);
+    fill: var(--black) !important;
 }
 
 .toolbox-icon:hover {
     background: none !important;
 }
 
-.welcome-cards-container {
+.welcome-card-column {
     display: none;
 }
