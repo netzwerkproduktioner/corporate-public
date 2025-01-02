@@ -187,6 +187,9 @@ do
     # organizing downloaded files  
     #
     #################
+    #
+    # TODO: refactor
+    #
     # after checkout specific files get picked, other files the repo are removed after setup 
     # expects the following repo structure:  
     # +-- ./
@@ -333,6 +336,28 @@ systemctl restart prosody
 # restarts with new configs  
 systemctl restart jicofo
 systemctl restart jitsi-videobridge2
+
+#################
+# ssh hardening
+#
+# change settings in /etc/ssh/sshd_config  
+# @see: https://community.hetzner.com/tutorials/basic-cloud-config/de  
+- sed -i -e "/^\(#\|\)PermitRootLogin/s/^.*$/PermitRootLogin no/" /etc/ssh/sshd_config
+- sed -i -e "/^\(#\|\)PasswordAuthentication/s/^.*$/PasswordAuthentication no/" /etc/ssh/sshd_config
+- sed -i -e "/^\(#\|\)X11Forwarding/s/^.*$/X11Forwarding no/" /etc/ssh/sshd_config
+- sed -i -e '/^\(#\|\)KbdInteractiveAuthentication/s/^.*$/KbdInteractiveAuthentication no/' /etc/ssh/sshd_config
+- sed -i -e '/^\(#\|\)ChallengeResponseAuthentication/s/^.*$/ChallengeResponseAuthentication no/' /etc/ssh/sshd_config
+- sed -i -e "/^\(#\|\)MaxAuthTries/s/^.*$/MaxAuthTries ${SSH_MAX_AUTHTRIES}/" /etc/ssh/sshd_config
+- sed -i -e "/^\(#\|\)AllowTcpForwarding/s/^.*$/AllowTcpForwarding no/" /etc/ssh/sshd_config
+- sed -i -e "/^\(#\|\)AllowAgentForwarding/s/^.*$/AllowAgentForwarding no/" /etc/ssh/sshd_config
+- sed -i -e "/^\(#\|\)Port/s/^.*$/Port ${SSH_PORT}/" /etc/ssh/sshd_config
+- sed -i -e "/^\(#\|\)AuthorizedKeysFile/s/^.*$/AuthorizedKeysFile .ssh\/authorized_keys/" /etc/ssh/sshd_config
+# set allowed users  
+# more than one user: user name separated by blanks  
+- sed -i "\$a AllowUsers ${SSH_USERS}" /etc/ssh/sshd_config
+#
+- systemctl restart ssh
+- systemctl enable ssh.service
 
 
 # override firewall settings from cloud-init.yaml  
