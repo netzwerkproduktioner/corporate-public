@@ -308,7 +308,7 @@ do
     { REPLACEMENT; sub(/alias .[^\$]+/, REPLACEMENT)};{ print $0}' | \
     sed -e "s~^\([ ]*\)root\(.*$\)~\1root \/var\/www/${FQDN};~g" \
     -e "s~${FQDN_AUTH}~${FQDN}~g" \
-    -e "s~set\ \$config_js_location.*$~set \$config_js_location \/etc\/jitsi\/meet\/${FQDN_AUTH}-config.js;~g" /etc/nginx/sites-available/${FQDN}.conf
+    -e "s~set\ \$config_js_location.*$~set \$config_js_location \/etc\/jitsi\/meet\/${FQDN_AUTH}-config.js;~g" > /etc/nginx/sites-available/${FQDN}.conf
 
     # enable sites 
     ln -sf /etc/nginx/sites-available/${FQDN}.conf /etc/nginx/sites-enabled/${FQDN}.conf
