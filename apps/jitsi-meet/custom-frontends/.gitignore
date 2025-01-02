@@ -3,4 +3,5 @@
 **/*.psd
 **/*.ai
 **/TODO.*
+**/.DS_Store
 !.gitignore
