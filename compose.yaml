@@ -1,0 +1,24 @@
+services:
+
+  template-server:
+    build: 
+      context: ./environment/docker/nginx
+    image: nginx:dev
+    container_name: template-server
+    hostname: template-server
+    volumes:
+    - ./apps/jitsi-meet/custom-frontends/subdomain1.domain.tld/templates:/opt/apps/jitsi/frontend
+    - ./environment/docker/nginx/templates:/etc/nginx/templates
+    ports:
+    - "8080:80"
+    environment:
+      # @see: https://hub.docker.com/_/nginx
+      # - NGINX_ENVSUBST_TEMPLATE_DIR=/etc/nginx/templates
+      # - NGINX_ENVSUBST_TEMPLATE_SUFFIX=.template
+      # - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d
+      - NGINX_LOCATION_ROOT=/opt/apps/jitsi/frontend
+      - NGINX_IP4_PORT=80
+      - NGINX_IP6_PORT=[::]:80
+
+networks: 
+  template-network:
