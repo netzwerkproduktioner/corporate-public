@@ -275,10 +275,13 @@ do
     # symlink image files  
     # NOTE: Use generic file names in your template folder or add individual file names here!  
     # 
-    IMAGE_FILES="watermark.svg header.jpg header.png waving-hand.svg"
+    IMAGE_FILES="watermark.svg header.jpg header.png waving-hand.svg favicon.svg"
+
+    mkdir -p ${APP_PATH}/custom-frontends/${FQDN}/images
 
     for FILE in ${IMAGE_FILES}
     do
+        mv ${APP_PATH}/custom-frontends/${FQDN}/templates/images/${FILE} ${APP_PATH}/custom-frontends/${FQDN}/images/${FILE}
         # symlink to ../jitsi-meet/images (no changes to filenames)
         ln -sf ${APP_PATH}/custom-frontends/${FQDN}/templates/images/${FILE} /var/www/${FQDN}/images/${FILE}
     done
@@ -287,6 +290,7 @@ do
     ln -sf ${APP_PATH}/custom-frontends/${FQDN}/templates/css/all.css /var/www/${FQDN}/css/all.css
     ln -sf ${APP_PATH}/custom-frontends/${FQDN}/templates/static/css /var/www/${FQDN}/static/css
     ln -sf ${APP_PATH}/custom-frontends/${FQDN}/templates/images/favicon.ico /var/www/${FQDN}/favicon.ico
+    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/templates/images/favicon.svg /var/www/${FQDN}/favicon.svg
 
     # renaming and parsing template html files to destination folder  
     sed -e "s~{{FQDN}}~${FQDN}~g" \
