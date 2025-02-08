@@ -273,6 +273,8 @@ do
     ln -sf ${APP_PATH}/custom-frontends/${FQDN}/static/welcomePageAdditionalContent.html /var/www/${FQDN}/static/welcomePageAdditionalContent.html
 
     # symlink image files  
+    # NOTE: Use generic file names in your template folder or add individual file names here!  
+    # 
     IMAGE_FILES="watermark.svg header.jpg header.png waving-hand.svg"
 
     for FILE in ${IMAGE_FILES}
