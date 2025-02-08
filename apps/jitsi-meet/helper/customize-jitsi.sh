@@ -356,6 +356,11 @@ systemctl restart prosody
 systemctl restart jicofo
 systemctl restart jitsi-videobridge2
 
+# on Ubuntu 22 and later socket based ssh is used  
+# switch to 'traditional ssh'
+# @see: https://community.hetzner.com/tutorials/securing-ssh/de#einleitung  
+systemctl stop ssh.socket && systemctl disable ssh.socket && systemctl start ssh.service && systemctl enable ssh.service && systemctl restart ssh
+
 #################
 # ssh hardening
 #
