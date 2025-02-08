@@ -370,19 +370,22 @@ sed -i -e '/^\(#\|\)AddressFamily/s/^.*$/AddressFamily inet/' /etc/ssh/sshd_conf
 sed -i "\$a AllowUsers ${SSH_USERS}" /etc/ssh/sshd_config
 
 
-systemctl restart ssh
 systemctl enable ssh.service
+systemctl restart ssh
 
 
 # override firewall settings from cloud-init.yaml  
 # close the default ssh port
-if [ ${SSH_PORT} -ne 22 ]
-then 
-    echo "close ssh port.."
-    ufw deny 22/tcp 
-else 
-    :
-fi
+
+# TODO: uncomment after debugging  
+
+# if [ ${SSH_PORT} -ne 22 ]
+# then 
+#     echo "close ssh port.."
+#     ufw deny 22/tcp 
+# else 
+#     :
+# fi
 
 systemctl restart ufw
 systemctl restart ssh
