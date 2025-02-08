@@ -288,17 +288,14 @@ do
     done
 
     mkdir -p ${APP_PATH}/custom-frontends/${FQDN}/static
+    mkdir -p ${APP_PATH}/custom-frontends/${FQDN}/css/
 
     cp ${APP_PATH}/custom-frontends/${FQDN}/templates/css/all.css ${APP_PATH}/custom-frontends/${FQDN}/css/all.css
-    cp ${APP_PATH}/custom-frontends/${FQDN}/templates/static/css ${APP_PATH}/custom-frontends/${FQDN}/static/css
-    cp ${APP_PATH}/custom-frontends/${FQDN}/templates/images/favicon.ico ${APP_PATH}/custom-frontends/${FQDN}/images/favicon.ico
-    cp ${APP_PATH}/custom-frontends/${FQDN}/templates/images/favicon.svg ${APP_PATH}/custom-frontends/${FQDN}/images/favicon.svg
+    cp -R ${APP_PATH}/custom-frontends/${FQDN}/templates/static/css ${APP_PATH}/custom-frontends/${FQDN}/static/css
 
     # symlink single files to ../jitsi-meet
     ln -sf ${APP_PATH}/custom-frontends/${FQDN}/css/all.css /var/www/${FQDN}/css/all.css
     ln -sf ${APP_PATH}/custom-frontends/${FQDN}/static/css /var/www/${FQDN}/static/css
-    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/images/favicon.ico /var/www/${FQDN}/favicon.ico
-    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/images/favicon.svg /var/www/${FQDN}/favicon.svg
 
     # renaming and parsing template html files to destination folder  
     sed -e "s~{{FQDN}}~${FQDN}~g" \
