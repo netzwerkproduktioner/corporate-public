@@ -181,7 +181,7 @@ do
     mkdir -p /var/www/${FQDN}
     mkdir -p ${APP_PATH}/configs/${FQDN}
 
-    JITSI_WATERMARK_LINK=${FQDN}
+    JITSI_WATERMARK_LINK=https://${FQDN}
     
     #################
     #
@@ -246,6 +246,8 @@ do
     # NOTICE: no blanks in file name allowed!
     # iterator separates at blanks
     STATIC_FILES="close3.html" 
+    
+    mkdir -p ${APP_PATH}/custom-frontends/${FQDN}/static
 
     for FILE in ${STATIC_FILES}
     do
@@ -254,7 +256,6 @@ do
         CONTENT_REPLACEMENT=$(sed -e "s~{{FQDN}}~${FQDN}~g" ${APP_PATH}/custom-frontends/${FQDN}/templates/static/${FILE})
         # temp file 
         # note: echo with double quotes to keep the line breaks..
-        mkdir -p ${APP_PATH}/custom-frontends/${FQDN}/static
         echo "${CONTENT_REPLACEMENT}" > ${APP_PATH}/custom-frontends/${FQDN}/static/${FILE}
         # symlink file 
         ln -sf ${APP_PATH}/custom-frontends/${FQDN}/static/${FILE} /var/www/${FQDN}/static/${FILE}
@@ -283,14 +284,21 @@ do
     do
         mv ${APP_PATH}/custom-frontends/${FQDN}/templates/images/${FILE} ${APP_PATH}/custom-frontends/${FQDN}/images/${FILE}
         # symlink to ../jitsi-meet/images (no changes to filenames)
-        ln -sf ${APP_PATH}/custom-frontends/${FQDN}/templates/images/${FILE} /var/www/${FQDN}/images/${FILE}
+        ln -sf ${APP_PATH}/custom-frontends/${FQDN}/images/${FILE} /var/www/${FQDN}/images/${FILE}
     done
 
+    mkdir -p ${APP_PATH}/custom-frontends/${FQDN}/static
+
+    cp ${APP_PATH}/custom-frontends/${FQDN}/templates/css/all.css ${APP_PATH}/custom-frontends/${FQDN}/css/all.css
+    cp ${APP_PATH}/custom-frontends/${FQDN}/templates/static/css ${APP_PATH}/custom-frontends/${FQDN}/static/css
+    cp ${APP_PATH}/custom-frontends/${FQDN}/templates/images/favicon.ico ${APP_PATH}/custom-frontends/${FQDN}/images/favicon.ico
+    cp ${APP_PATH}/custom-frontends/${FQDN}/templates/images/favicon.svg ${APP_PATH}/custom-frontends/${FQDN}/images/favicon.svg
+
     # symlink single files to ../jitsi-meet
-    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/templates/css/all.css /var/www/${FQDN}/css/all.css
-    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/templates/static/css /var/www/${FQDN}/static/css
-    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/templates/images/favicon.ico /var/www/${FQDN}/favicon.ico
-    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/templates/images/favicon.svg /var/www/${FQDN}/favicon.svg
+    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/css/all.css /var/www/${FQDN}/css/all.css
+    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/static/css /var/www/${FQDN}/static/css
+    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/images/favicon.ico /var/www/${FQDN}/favicon.ico
+    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/images/favicon.svg /var/www/${FQDN}/favicon.svg
 
     # renaming and parsing template html files to destination folder  
     sed -e "s~{{FQDN}}~${FQDN}~g" \
