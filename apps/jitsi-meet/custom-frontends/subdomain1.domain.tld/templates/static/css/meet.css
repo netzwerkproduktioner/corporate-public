@@ -118,7 +118,6 @@ a[name=top] {
     flex-direction: column;
     justify-content: center;
     align-items: center;    
-    background-color: var(--darkgrey);
     padding: 6rem 12rem;
 }
 
@@ -207,6 +206,30 @@ a[name=top] {
     border-color: var(--white);
     color: var(--white);
 }
+
+
+/* footer in legal notice and privacy policy */
+
+.meet-footer {
+    color: var(--white);
+}
+
+.meet-footer a,
+.meet-footer a:hover, 
+.meet-footer a:visited {
+    color: var(--white)
+}
+
+.meet-footer a:hover {
+    text-decoration: underline;
+}
+
+.meet-footer a,
+.meet-footer a:visited {
+    text-decoration: none;
+}
+
+/* footer on landing page */
 
 .footer {
     margin-top: 30px; 

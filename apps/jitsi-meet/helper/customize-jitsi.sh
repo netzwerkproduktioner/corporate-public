@@ -40,8 +40,10 @@ mkdir ${APP_PATH}/backup
 # create simple list from frontend-folder
 # NOTE: folder names will be set as adresses and expected to be in that form: subdomain.domain.tld  
 
+#
 # ORDERED list of template names
-# NOTE: let var empty to use the folder names as given in your directory  
+#
+# NOTE: let var empty to use the folder names as given in your directory '/path/to/custom-frontends'
 TEMPLATE_NAMES="${FQDN_TEMPLATES}"
 
 
@@ -258,6 +260,8 @@ do
         ln -sf ${APP_PATH}/custom-frontends/${FQDN}/static/${FILE} /var/www/${FQDN}/static/${FILE}
     done
 
+    # TODO: refactor with generic run over all static files with all placeholders  
+
     # replace placeholder in welcome page with your custom page
     # troubleshooting sed @see: https://www.gnu.org/software/sed/manual/html_node/Multiple-commands-syntax.html 
     sed -e "s~{{FQDN}}~${FQDN}~g" \
@@ -283,7 +287,8 @@ do
     ln -sf ${APP_PATH}/custom-frontends/${FQDN}/templates/images/favicon.ico /var/www/${FQDN}/favicon.ico
 
     # renaming and parsing template html files to destination folder  
-    sed -e "s~{{FILENAME_LEGAL_NOTICE}}~${FILENAME_LEGAL_NOTICE}~g" \
+    sed -e "s~{{FQDN}}~${FQDN}~g" \
+    -e "s~{{FILENAME_LEGAL_NOTICE}}~${FILENAME_LEGAL_NOTICE}~g" \
     -e "s~{{NAME_LEGAL_NOTICE}}~${NAME_LEGAL_NOTICE}~g" \
     -e "s~{{NAME_PRIVACY_POLICY}}~${NAME_PRIVACY_POLICY}~g" \
     -e "s~{{FILENAME_PRIVACY_POLICY}}~${FILENAME_PRIVACY_POLICY}~g" ${APP_PATH}/custom-frontends/${FQDN}/templates/static/legal-notice_de.html.template > ${APP_PATH}/custom-frontends/${FQDN}/static/${FILENAME_LEGAL_NOTICE}
