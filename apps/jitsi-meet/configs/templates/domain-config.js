@@ -187,7 +187,7 @@ var config = {
 
     // Start calls with audio muted. Unlike the option above, this one is only
     // applied locally. FIXME: having these 2 options is confusing.
-    // startWithAudioMuted: false,
+    startWithAudioMuted: true,
 
     // Enabling it (with #params) will disable local audio output of remote
     // participants and to enable it back a reload is needed.
@@ -338,7 +338,7 @@ var config = {
 
     // Start calls with video muted. Unlike the option above, this one is only
     // applied locally. FIXME: having these 2 options is confusing.
-    // startWithVideoMuted: false,
+    startWithVideoMuted: true,
 
     // Desktop sharing
 
@@ -746,7 +746,7 @@ var config = {
 
     // Enabling the close page will ignore the welcome page redirection when
     // a call is hangup.
-    // enableClosePage: false,
+    enableClosePage: true,
 
     // Disable hiding of remote thumbnails when in a 1-on-1 conference call.
     // Setting this to null, will also disable showing the remote videos
@@ -1078,7 +1078,7 @@ var config = {
     // If third party requests are disabled, no other server will be contacted.
     // This means avatars will be locally generated and external stats integration
     // will not function.
-    // disableThirdPartyRequests: false,
+    disableThirdPartyRequests: true,
 
 
     // Peer-To-Peer mode: used (if enabled) when there are just 2 participants.
