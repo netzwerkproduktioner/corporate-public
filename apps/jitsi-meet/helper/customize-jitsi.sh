@@ -266,10 +266,10 @@ do
     # replace placeholder in welcome page with your custom page
     # troubleshooting sed @see: https://www.gnu.org/software/sed/manual/html_node/Multiple-commands-syntax.html 
     sed -e "s~{{FQDN}}~${FQDN}~g" \
-    -e "s~{{NAME_LEGAL_NOTICE}}~${NAME_LEGAL_NOTICE}~g" \
-    -e "s~{{NAME_PRIVACY_POLICY}}~${NAME_PRIVACY_POLICY}~g" \
-    -e "s~{{FILENAME_LEGAL_NOTICE}}~${FILENAME_LEGAL_NOTICE}~g" \
-    -e "s~{{FILENAME_PRIVACY_POLICY}}~${FILENAME_PRIVACY_POLICY}~g" ${APP_PATH}/custom-frontends/${FQDN}/templates/static/welcome.html > ${APP_PATH}/custom-frontends/${FQDN}/static/welcomePageAdditionalContent.html
+    -e "s~{{LEGAL_NOTICE_NAME}}~${LEGAL_NOTICE_NAME}~g" \
+    -e "s~{{PRIVACY_POLICY_NAME}}~${PRIVACY_POLICY_NAME}~g" \
+    -e "s~{{LEGAL_NOTICE_FILENAME}}~${LEGAL_NOTICE_FILENAME}~g" \
+    -e "s~{{PRIVACY_POLICY_FILENAME}}~${PRIVACY_POLICY_FILENAME}~g" ${APP_PATH}/custom-frontends/${FQDN}/templates/static/welcome.html > ${APP_PATH}/custom-frontends/${FQDN}/static/welcomePageAdditionalContent.html
 
     ln -sf ${APP_PATH}/custom-frontends/${FQDN}/static/welcomePageAdditionalContent.html /var/www/${FQDN}/static/welcomePageAdditionalContent.html
 
@@ -299,15 +299,15 @@ do
 
     # renaming and parsing template html files to destination folder  
     sed -e "s~{{FQDN}}~${FQDN}~g" \
-    -e "s~{{FILENAME_LEGAL_NOTICE}}~${FILENAME_LEGAL_NOTICE}~g" \
-    -e "s~{{NAME_LEGAL_NOTICE}}~${NAME_LEGAL_NOTICE}~g" \
-    -e "s~{{NAME_PRIVACY_POLICY}}~${NAME_PRIVACY_POLICY}~g" \
-    -e "s~{{FILENAME_PRIVACY_POLICY}}~${FILENAME_PRIVACY_POLICY}~g" ${APP_PATH}/custom-frontends/${FQDN}/templates/static/legal-notice_de.html.template > ${APP_PATH}/custom-frontends/${FQDN}/static/${FILENAME_LEGAL_NOTICE}
-    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/static/${FILENAME_LEGAL_NOTICE} /var/www/${FQDN}/static/${FILENAME_LEGAL_NOTICE}
+    -e "s~{{LEGAL_NOTICE_FILENAME}}~${LEGAL_NOTICE_FILENAME}~g" \
+    -e "s~{{LEGAL_NOTICE_NAME}}~${LEGAL_NOTICE_NAME}~g" \
+    -e "s~{{PRIVACY_POLICY_NAME}}~${PRIVACY_POLICY_NAME}~g" \
+    -e "s~{{PRIVACY_POLICY_FILENAME}}~${PRIVACY_POLICY_FILENAME}~g" ${APP_PATH}/custom-frontends/${FQDN}/templates/static/legal-notice_de.html.template > ${APP_PATH}/custom-frontends/${FQDN}/static/${LEGAL_NOTICE_FILENAME}
+    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/static/${LEGAL_NOTICE_FILENAME} /var/www/${FQDN}/static/${LEGAL_NOTICE_FILENAME}
 
-    sed -e "s~{{FILENAME_PRIVACY_POLICY}}~${FILENAME_PRIVACY_POLICY}~g" \
-    -e "s~{{NAME_PRIVACY_POLICY}}~${NAME_PRIVACY_POLICY}~g" ${APP_PATH}/custom-frontends/${FQDN}/templates/static/privacy-policy-jitsi_de.html.template > ${APP_PATH}/custom-frontends/${FQDN}/static/${FILENAME_PRIVACY_POLICY}
-    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/static/${FILENAME_PRIVACY_POLICY} /var/www/${FQDN}/static/${FILENAME_PRIVACY_POLICY}
+    sed -e "s~{{PRIVACY_POLICY_FILENAME}}~${PRIVACY_POLICY_FILENAME}~g" \
+    -e "s~{{PRIVACY_POLICY_NAME}}~${PRIVACY_POLICY_NAME}~g" ${APP_PATH}/custom-frontends/${FQDN}/templates/static/privacy-policy-jitsi_de.html.template > ${APP_PATH}/custom-frontends/${FQDN}/static/${PRIVACY_POLICY_FILENAME}
+    ln -sf ${APP_PATH}/custom-frontends/${FQDN}/static/${PRIVACY_POLICY_FILENAME} /var/www/${FQDN}/static/${PRIVACY_POLICY_FILENAME}
 
     # lets replace some things..
     # awk
@@ -379,23 +379,15 @@ sed -i -e '/^\(#\|\)AddressFamily/s/^.*$/AddressFamily inet/' /etc/ssh/sshd_conf
 # more than one user: user name separated by blanks  
 sed -i "\$a AllowUsers ${SSH_USERS}" /etc/ssh/sshd_config
 
-
-systemctl enable ssh.service
-systemctl restart ssh
-
-
 # override firewall settings from cloud-init.yaml  
 # close the default ssh port
-
-# TODO: uncomment after debugging  
-
-# if [ ${SSH_PORT} -ne 22 ]
-# then 
-#     echo "close ssh port.."
-#     ufw deny 22/tcp 
-# else 
-#     :
-# fi
+if [ ${SSH_PORT} -ne 22 ]
+then 
+    echo "close ssh port.."
+    ufw deny 22/tcp 
+else 
+    :
+fi
 
 systemctl restart ufw
 systemctl restart ssh
