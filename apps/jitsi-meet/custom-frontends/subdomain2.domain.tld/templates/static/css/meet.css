@@ -118,7 +118,6 @@ a[name=top] {
     flex-direction: column;
     justify-content: center;
     align-items: center;    
-    background-color: var(--darkgrey);
     padding: 6rem 12rem;
 }
 
@@ -208,6 +207,30 @@ a[name=top] {
     color: var(--white);
 }
 
+
+/* footer in legal notice and privacy policy */
+
+.meet-footer {
+    color: var(--white);
+}
+
+.meet-footer a,
+.meet-footer a:hover, 
+.meet-footer a:visited {
+    color: var(--white)
+}
+
+.meet-footer a:hover {
+    text-decoration: underline;
+}
+
+.meet-footer a,
+.meet-footer a:visited {
+    text-decoration: none;
+}
+
+/* footer on landing page */
+
 .footer {
     margin-top: 30px; 
     line-height: 1.7; 
@@ -215,7 +238,7 @@ a[name=top] {
     width: 100%;
     height: 40px;
     bottom: 0;
-    background: var(--white) !important; 
+    background: var(--darkgrey) !important; 
 }
 
 .footer-about {
@@ -227,51 +250,30 @@ a[name=top] {
 }
 
 .footer-link {
-    color: var(--black) !important;
+    color: var(--lightgrey) !important;
 }
 
-.icon {
-    font-family: MaterialIcons;
-    text-decoration: none;
-}
 
-.icon a,
-.icon a:hover, 
-.icon a:active,
-.icon a:visited {
-    text-decoration: none;
-    color: inherit;
-}
-
-.size_96 {
-    font-size: 96px;
-}
-
-.white {
-    color: var(--white);
-}
-
-/* ############################# */
 /* overrides defaults in all.css */
 
 .header {
     height: 437px;
     background-position: center !important;
     background-repeat: no-repeat !important;
-    background-color: var(--white) !important;
+    background-color:#272727 !important;
     background-size: auto !important;
     background-size: auto !important; /* uncomment this if you use a centered background with same background-color (left and right) */
-    background-image: none !important;
+    background-image: url(../../images/header.png) !important;
     background-image: none !important;
 }
 
 .header-text-title, 
 .header-text-subtitle {
-    display: none;
+    color: var(--lightgrey) !important;
 }
 
 .welcome {
-    background-color: var(--white) !important;
+    background-color: var(--darkgrey) !important;
 }
 
 .welcome-card--blue {
@@ -279,12 +281,16 @@ a[name=top] {
 }
 
 .header, .welcome .header {
-    background: var(--white) !important; 
+    background: var(--darkgrey) !important; 
 }
 
 .welcome .header .header-container {
-    margin: 240px auto 0 !important;
-    max-width: 720px !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+}
+
+.header-container {
+    padding-top: 40px !important;
 }
 
 .welcome .header .header-watermark-container {
@@ -296,19 +302,14 @@ a[name=top] {
     height: 160px;
 }
 
-.welcome-watermark {
-    display: none !important;
-}
-
 .welcome .welcome-watermark .watermark.leftwatermark {
     width: 80px !important;
     height: 80px !important;
 }
 
 .welcome .welcome-page-settings {
-    right: 24px !important;
-    top: -24px !important;
-    background: none !important;
+    right: 80px !important;
+    top: 80px !important;
 }
 
 .watermark, .leftwatermark {
@@ -323,8 +324,8 @@ a[name=top] {
 }
 .welcome .welcome-page-settings {
     background: none !important;
-    top: -24px !important;
-    right: 24px !important;
+    top: 40px !important;
+    right: 40px !important;
 }
 
 .welcome .welcome-page-settings:hover, .welcome-page-settings:hover {
@@ -336,34 +337,4 @@ div#videospace div.leftwatermark.watermark {
     margin: 0 !important;
     width: 160px;
     height: 160px;
-}
-
-.welcome .header #enter_room {
-    max-width: 580px !important;
-}
-
-.welcome .header #enter_room .enter-room-input-container .enter-room-input {
-    border: 0.1rem solid var(--black) !important;
-}
-
-.welcome .welcome-page-button {
-    background: var(--darkgrey) !important;
-    padding: 15px 20px !important;
-}
-
-.welcome .welcome-page-button:hover {
-    background: var(--white) !important;
-    color: var(--darkgrey) !important;
-}
-
-.jitsi-icon-default svg {
-    fill: var(--black) !important;
-}
-
-.toolbox-icon:hover {
-    background: none !important;
-}
-
-.welcome-card-column {
-    display: none;
 }

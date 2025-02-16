@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <link rel='stylesheet' href='css/meet.css' type='text/css' media='all' />
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
-    <title>{{NAME_PRIVACY_POLICY}}</title>
+    <title>{{PRIVACY_POLICY_NAME}}</title>
 </head>
 <body class="body">
     <main class="meet-main">
         <a name="top"></a>
         <section class="meet-section">
             <article class="meet-article">
-                <h1>{{NAME_PRIVACY_POLICY}}</h1>
+                <h1>{{PRIVACY_POLICY_NAME}}</h1>
                 <h2>Informationen zum Daten­schutz</h2>
                 <p>Mit dieser Datenschutzerklärung möchten wir (im folgenden „Anbieter“) Sie als NutzerIn über den Umfang der Erhebung personenbezogener Daten bei Aufruf und Nutzung unserer  Internetseiten informieren. Ferner werden der Zweck der Datenerhebung und deren Verwendung bzw. Verarbeitung (Artikel 4, DSGVO) dargestellt.</p>
                 <h3>Verantwortlicher im Sinne des Art. 4 (DSGVO)</h3>
@@ -102,6 +102,9 @@
             <nav>
                 <form action="#top">
                     <button class="meet-button">nach oben</button>
+                </form>
+                <form action="https://{{FQDN}}">
+                    <button class="meet-button">zurück</button>
                 </form>
             </nav>
         </section>

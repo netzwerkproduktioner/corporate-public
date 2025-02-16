@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel='stylesheet' href='css/meet.css' type='text/css' media='all' />
-  <title>{{NAME_LEGAL_NOTICE}}</title>
+  <title>{{LEGAL_NOTICE_NAME}}</title>
 </head>
 <body class="body">
   <main class="meet-main">
     <section class="meet-section">
       <article class="meet-article">
-        <h1>{{NAME_LEGAL_NOTICE}}</h1>
+        <h1>{{LEGAL_NOTICE_NAME}}</h1>
               <address class="meet-address">
                   <div vocab="http://schema.org/" typeof="Organization">
                       <h2><span property="name">Bj&ouml;rn Englert GmbH</span></h2>
@@ -36,7 +36,7 @@
           <em>Die Bj&ouml;rn Englert GmbH ist zugleich Anbieterin im Sinne des <abbr title="Telemediengesetz">TMG</abbr></em>
       </article>
       <footer class="meet-footer">
-          <div>Unter folgendem Link finden Sie unsere <a href="{{FILENAME_PRIVACY_POLICY}}" href="_self" title="Datenschutzerklärung">Datenschutzerkl&auml;rung</a>.</div>
+          <div>Unter folgendem Link finden Sie unsere <a href="{{PRIVACY_POLICY_FILENAME}}" href="_self" title="Datenschutzerklärung">{{PRIVACY_POLICY_NAME}}</a>.</div>
       </footer>
     </section>
   </main>
