@@ -1,0 +1,186 @@
+#cloud-config
+users:
+  # name defaults to username 'jitsi'
+  - name: {{USER_JITSI}}
+    groups: users, admin, docker
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - {{USER_PUBLIC_KEY}}
+
+packages:
+  - ufw
+  - fail2ban
+  - nano
+
+write_files:
+  # register all your subdomains in this file.
+  # be aware that you setup nginx config files too.
+  - path: /var/lib/acme/domains.txt
+    content: |
+      {{SUBDOMAIN_DOMAIN_TLD}}
+    apppend: true
+    defer: true
+
+  # initial params (avoids nginx errors)
+  - path: /var/lib/acme/dhparam/dhparam.pem
+    # openssl dhparam -out /path/to/file/dhparam-strong.pem 4096 
+    content: |
+      -----BEGIN DH PARAMETERS-----
+      MIICCAKCAgEAi/HAcicAuYzkeNlm0P4rSsWil58puNtfrKD6VvdE1NLwobsrfshQ
+      8M0Axeh2a6geEcaQaLN9O8iy1rJDanUO/CQMDGuG+l24v/QdHVserEhcaSPkNms0
+      VHfeOpx8a0FkwMtvHe5Z0uUNjjyJXVowLYYQqDc9p1KNerB7bp1pgX/iPpFM3l+p
+      rVxB+GjHJt7mLgRFpmLhmSXQ6dcOeUBAnecpp+D7+Y6zyVE8mZQFw0Q4+flTDx18
+      UcojU56KcvvMtZJSh7DFTRwsJeKul4l5Khh2h54TYCO4cxFLDK3X6y48ml0uecUk
+      PwhGNnMOjfvJ1e7fYkZpX9eEV3ODzb+ebeJXcpiCmlEJqMwPmpQtJEGLT8Kor4XX
+      zXSIXoTAHrcer7wDTRj9JnBs/K++bmrqncUiIdkV+PilkZK6tX8dLruE0+3q1eaH
+      zBeXD+UcOdSnCp5f7bOsAa90BAn9NLV71z+nKl6KvPF/IrIv/Xy0FrIHvDOW8p45
+      AMDRBcDqvnk65/i0abRkv/7ftru9M/x50bCDvOFZ1L1Ru6EYADHp2uyvTA21nQOT
+      c7TP7ch25SsSj+kDDt0yFjqVUzUuJtnCFKkM6KHfbrfXgJlvVHbhro2Yg9ttqMWT
+      5ZtGeHNIl1o9EMoX4FkLh2Qesh3yy2f3DxccPEbn392arS2eeQ6uFosCAQI=
+      -----END DH PARAMETERS-----
+
+    defer: true
+
+  # your env with credentials and individual settings (consumed by helpers)
+  - path: {{APP_PATH}}/.env
+    content: |
+      # Prosody handles the authentification at jitsi. 
+      # The Prosody user can open the room and administrate 
+      # the conference
+      PROSODY_USER={{PROSODY_USER}}
+      PROSODY_PASS={{PROSODY_PASS}}
+
+      # Your mail address used to register at certbot
+      # for your Let's Encrypt Certificate. 
+      # @see: https://certbot.eff.org/ 
+      CERT_MAILADDRESS={{CERT_MAILADDRESS}}
+
+      # secrets set in jitsi config files  
+      JICOFO_PASSWORD={{JICOFO_PASSWORD}}
+      EXTERNAL_SERVICE_SECRET={{EXTERNAL_SERVICE_SECRET}}
+
+      # setting the fully qualified domain name
+      # the auth account is used as major domain for XMPP, ..
+      FQDN_AUTH="{{SUBDOMAIN.DOMAIN.TLD}}"
+
+      # NOTE: this is an ordered list
+      # leave empty to use the folder names as given in your custom-frontends folder  
+      FQDN_TEMPLATES="{{FQDN_TEMPLATES}}"
+
+      # path depending to your repositories structure 
+      # - expects /opt as existing directory on your system
+      # - expects repo structure (your public repo):
+      # +-- ./opt
+      # |   +-- apps
+      # |   |   +-- jitsi-meet 
+      # |   |   |   +-- configs
+      # |   |   |   +-- custom-frontends
+      # |   |   |   |   +-- subdomain.domain.tld (folder) 
+      # |   |   |   |   |   +-- templates
+      # |   |   |   |   |   |   +-- css
+      # |   |   |   |   |   |   |   +-- all.css
+      # |   |   |   |   |   |   +-- images
+      # |   |   |   |   |   |   |   +-- header.jpg|.png
+      # |   |   |   |   |   |   |   +-- watermark.svg
+      # |   |   |   |   |   |   +-- static
+      # |   |   |   |   |   |   |   +-- css
+      # |   |   |   |   |   |   |   |   +-- meet.css
+      # |   |   |   |   |   |   |   +-- close3.html
+      # |   |   |   |   |   |   |   +-- legal-notice_de.html.template
+      # |   |   |   |   |   |   |   +-- privacy-policy-jitsi_de.html.template
+      # |   |   |   |   |   |   |   +-- welcome.html
+      # |   |   |   +-- helper
+      # |   +-- <other files/folders>
+
+      CUSTOMIZATIONS_REPO={{CUSTOMIZATIONS_REPO}}
+      APP_PATH={{APP_PATH}}
+      APP_NAME={{APP_NAME}}
+
+      # use your custom filenames and extensions for legal files  
+      # set also the names of the links
+      LEGAL_NOTICE_NAME={{LEGAL_NOTICE_NAME}}
+      
+      # filename with extension! (i.e. '.html')
+      LEGAL_NOTICE_FILENAME={{LEGAL_NOTICE_FILENAME}}
+
+      PRIVACY_POLICY_NAME={{PRIVACY_POLICY_NAME}}
+      
+      # filename with extension! (i.e. '.html')
+      PRIVACY_POLICY_FILENAME={{PRIVACY_POLICY_FILENAME}}
+
+      # ssh hardening (secret paramater)  
+      SSH_PORT={{SSH_PORT}}
+      SSH_USERS="{{SSH_USERS}}"
+      SSH_MAX_AUTHTRIES={{SSH_MAX_AUTHTRIES}}
+
+    defer: true
+
+runcmd:
+  # set vars  
+  - CUSTOMIZATIONS_REPO={{CUSTOMIZATIONS_REPO}}
+  - APP_PATH={{APP_PATH}}
+  # configure firewall
+  - [ ufw, default, deny, incoming ]
+  - [ ufw, default, allow, outgoing ]
+  # the default ssh port can be omitted  
+  # - [ ufw, allow, ssh ]
+  - [ ufw, allow, http ]
+  - [ ufw, allow, https ]
+  - [ ufw, allow, 'Nginx HTTP']
+  - [ ufw, allow, 'Nginx Full']
+  # the port 33322 is the 'secret' ssh port
+  - [ ufw, allow, 33322/tcp ]
+  # the standard port 22 is closed automatically after running the setup successfully 
+  - [ ufw, allow, 22/tcp ]
+  # jitsi: For General Network Audio/Video Meetings.
+  - [ ufw, allow, 10000/udp ]
+  # jitsi: For querying the stun server (coturn, optional, needs config.js change to enable it).
+  - [ ufw, allow, 3478/udp ]
+  # jitsi: For fallback network video/audio communications over TCP (when UDP is blocked for example), served by coturn. 
+  - [ ufw, allow, 5349/tcp ]
+  - [ ufw, enable ]
+  # set timezone
+  - ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+  - dpkg-reconfigure --frontend noninteractive tzdata
+  # set default shell to bash
+  # (debian/ubuntu uses bash for interactive shell and dash for sh-scripts!)
+  - echo "dash dash/sh boolean false" | debconf-set-selections
+  - DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+  # ###########################################################################
+  # configure fail2ban
+  # @see: https://wiki.ubuntuusers.de/fail2ban/, 
+  # @see: https://community.hetzner.com/tutorials/securing-ssh#step-2---setup-of-fail2ban)
+  # NOTE: man jail.conf: In .local files specify only the settings you would like to change 
+  # and the rest of the configuration will then come from the corresponding .conf file which is parsed first.
+  # NOTE: set the same ssh-port as above!
+  # NOTE: backend=systemd fixes debian 12 bug  
+  # create fail2ban.local  
+  - printf "[Definition]\nallowipv6 = auto\n" >> /etc/fail2ban/fail2ban.local
+  # create jail.local file  
+  - printf "[DEFAULT]\nbackend = systemd\nbantime = 2592000\nmaxretry = 3\n" >> /etc/fail2ban/jail.local
+  # NOTE: You changed from iptables-multiport to iptables-allports, which blocks all ports for jailed IP.  
+  # NOTE: You changed mode from 'normal' to 'extra' which should activate the 'Unable to negotiate' pattern: 
+  # @see: https://github.com/fail2ban/fail2ban/blob/master/config/filter.d/sshd.conf  
+  - printf "[sshd]\nenabled = true\nfilter = sshd\nbanaction = iptables-allports\nport = ssh, 33322 \nmode = extra" >> /etc/fail2ban/jail.local
+  - systemctl enable fail2ban
+  #################  
+  # 
+  # SSH hardening is done separately after setting up jitsi (one-click-installer)  
+  #
+  #################  
+  # create fresh dhparams
+  - openssl dhparam -out /var/lib/acme/dhparam/dhparam-strong.pem 2048
+  - mv -f /var/lib/acme/dhparam/dhparam-strong.pem /var/lib/acme/dhparam/dhparam.pem
+  - service nginx reload && service nginx restart
+  # get configs and templates from repo  
+  - TEMP_FOLDER_MD5=$(echo ${RANDOM} | md5sum | awk '{print $1}')
+  - git clone ${CUSTOMIZATIONS_REPO} /opt/apps/${TEMP_FOLDER_MD5}/repo
+  - mkdir -p ${APP_PATH}
+  - mv -f /opt/apps/${TEMP_FOLDER_MD5}/repo/apps/jitsi-meet/* ${APP_PATH}/
+  - rm -R /opt/apps/${TEMP_FOLDER_MD5}
+  - chmod +x ${APP_PATH}/helper/customize-jitsi.sh
+  # central customization file (not placed in clients repos)
+  # remember: curl -f : fails silenty -o writes source file to destination filename  
+  - curl -fo ${APP_PATH}/helper/customize-jitsi.sh "https://raw.githubusercontent.com/netzwerkproduktioner/corporate-public/main/apps/jitsi-meet/helper/customize-jitsi.sh" 
+  - chmod +x ${APP_PATH}/helper/customize-jitsi.sh
