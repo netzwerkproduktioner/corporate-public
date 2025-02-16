@@ -1,0 +1,8 @@
+# prevents checking-in files with credentials
+jitsi.env
+cloud-config.yaml 
+*-cloud-config.yaml
+docs/**
+!docs/readme.md
+**/TODO.*
+readme.md
