@@ -287,8 +287,7 @@ do
         ln -sf ${APP_PATH}/custom-frontends/${FQDN}/images/${FILE} /var/www/${FQDN}/images/${FILE}
     done
 
-    mkdir -p ${APP_PATH}/custom-frontends/${FQDN}/static
-    mkdir -p ${APP_PATH}/custom-frontends/${FQDN}/css/
+    mkdir -p ${APP_PATH}/custom-frontends/${FQDN}/css
 
     cp ${APP_PATH}/custom-frontends/${FQDN}/templates/css/all.css ${APP_PATH}/custom-frontends/${FQDN}/css/all.css
     cp -R ${APP_PATH}/custom-frontends/${FQDN}/templates/static/css ${APP_PATH}/custom-frontends/${FQDN}/static/css
